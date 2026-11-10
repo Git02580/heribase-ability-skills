@@ -30,14 +30,14 @@ npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --glob
 
 ## 2. 准备基础环境
 
-| 组件 | 要求 | 用途 |
-| --- | --- | --- |
-| Python | 3.9+；新装推荐 3.12，含 venv/pip | 工作台与任务脚本 |
-| Node.js | 24+ | 随附的 JavaScript CLI 与 npx 安装器 |
-| Git | 可在终端运行 | 使用 npx 从仓库安装 |
-| Pillow、openpyxl、defusedxml | 由 setup.py 安装 | 图片、表格及 XML 处理 |
-| 浏览器 | 现代桌面浏览器 | 登录与可选工作台 |
-| Codex CLI | 仅网页后台自动整理需要，须已登录 | 自动整理执行器 |
+| 组件                         | 要求                             | 用途                                |
+| ---------------------------- | -------------------------------- | ----------------------------------- |
+| Python                       | 3.9+；新装推荐 3.12，含 venv/pip | 工作台与任务脚本                    |
+| Node.js                      | 24+                              | 随附的 JavaScript CLI 与 npx 安装器 |
+| Git                          | 可在终端运行                     | 使用 npx 从仓库安装                 |
+| Pillow、openpyxl、defusedxml | 由 setup.py 安装                 | 图片、表格及 XML 处理               |
+| 浏览器                       | 现代桌面浏览器                   | 登录与可选工作台                    |
+| Codex CLI                    | 仅网页后台自动整理需要，须已登录 | 自动整理执行器                      |
 
 基础程序检查：
 
@@ -92,11 +92,13 @@ Windows 将前缀改为 `py -3`。可以重复执行。脚本会创建 `heribase
 
 CLI 已包含在 `heribase-cli/bin/heribase` 中，它是 JavaScript 文件。直接用 Node 启动，无需复制另一个 CLI，也无需修改全局 PATH。
 
+默认 API 地址为 `https://api.heribase.com`。首次执行登录或业务命令时，CLI 自动初始化本机配置；普通用户直接登录即可。
+
 macOS/Linux：
 
 ```sh
 SKILLS_DIR="$HOME/.agents/skills"  # 改成你的实际目录
-node "$SKILLS_DIR/heribase-cli/bin/heribase" configure --api-base-url "<HeriBase 提供的 API 地址>"
+node "$SKILLS_DIR/heribase-cli/bin/heribase" configure --api-base-url https://api.heribase.com
 node "$SKILLS_DIR/heribase-cli/bin/heribase" login
 node "$SKILLS_DIR/heribase-cli/bin/heribase" status --json
 ```
@@ -105,12 +107,13 @@ Windows PowerShell：
 
 ```powershell
 $skillsDir = Join-Path $HOME '.agents\skills' # 改成你的实际目录
-node "$skillsDir\heribase-cli\bin\heribase" configure --api-base-url "<HeriBase 提供的 API 地址>"
 node "$skillsDir\heribase-cli\bin\heribase" login
 node "$skillsDir\heribase-cli\bin\heribase" status --json
 ```
 
-API 地址由服务提供方给出，不根据 GitHub 地址猜测。登录由用户在浏览器完成。未配置或未登录表示服务连接尚未完成，不代表本地依赖安装失败。CLI 管理用户目录下的 `.heribase`；不要读取或复制 `auth.json` 排障。
+已有配置会保留，不会被默认地址覆盖。确实需要测试环境或其他服务地址时，才运行 `node <CLI路径> configure --api-base-url <自定义地址>`；首次初始化也可通过 `HERIBASE_API_BASE_URL` 指定地址。配置优先级为已有配置 → 环境变量 → 官方默认地址。
+
+登录由用户在浏览器完成。未登录不代表本地依赖安装失败。CLI 管理用户目录下的 `.heribase`；不要读取或复制 `auth.json` 排障。`--help`、`version` 以及环境脚本的 `--check` 不创建配置。
 
 技能文档中的 `heribase ...` 均可替换为上面的 `node .../bin/heribase ...`。需要直接输入 `heribase` 时，可自行把 `heribase-cli/bin` 加入 PATH；这不是首次使用的必要步骤。
 

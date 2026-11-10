@@ -21,7 +21,7 @@ CLI Skill 本身绝不读取或修改 `~/.heribase` 中的文件。任务包例�
 ## 使用前检查
 
 1. 先执行 `heribase status --json`。
-2. 未配置时，请用户执行 `heribase configure --api-base-url <url>`。
+2. 首次使用由 CLI 自动初始化 `https://api.heribase.com`；不要要求普通用户提供 API 地址。已有配置保持不变，只有用户需要自定义服务地址时才执行 `heribase configure --api-base-url <url>`。
 3. 未登录或服务端返回未授权时，请用户执行 `heribase login`。该命令会启动浏览器登录，Agent 不应替代用户完成认证。
 4. 所有业务、任务和诊断调用都使用 `--json`，只解析 stdout 中唯一的 JSON 文档；stderr 仅用于诊断，绝不从中提取业务结果。
 

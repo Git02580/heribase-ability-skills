@@ -57,7 +57,7 @@ py -3 "$skillsDir\heribase-cli\scripts\setup.py" --install
 
 其他 Agent 请将目录替换为安装器实际输出的位置。检查通过后，把结果交给 Agent；后续 Python 脚本使用输出里的 `python` 路径。
 
-首次连接需要 HeriBase 提供的 API 地址，并由你完成浏览器登录，具体命令见[配置与登录](skills/heribase-cli/references/installation.md#配置与登录)。随后就可以直接说：
+首次使用自动初始化配置；你只需完成浏览器登录，具体命令见[配置与登录](skills/heribase-cli/references/installation.md#配置与登录)。随后就可以直接说：
 
 - “帮我整理这些钱币照片，先让我核对正反面。”
 - “识别这枚钱币，结果确认后再加入收藏。”

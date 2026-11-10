@@ -19,7 +19,8 @@ heribase logout
 heribase status --json
 ```
 
-- `configure` 仅保存 API 地址、语言和最大 Worker 数；不会保存 token。
+- 首次使用自动初始化官方 API `https://api.heribase.com`；已有配置优先，首次初始化的 `HERIBASE_API_BASE_URL` 可覆盖默认值。帮助和版本查询不创建配置。
+- `configure` 用于自定义 API 地址、语言和最大 Worker 数；普通用户可直接 `login`，无需先配置。它不会保存 token。
 - `login` 打开浏览器并接收本机回调；需要用户完成网页登录。
 - `status --json` 用于确认 CLI 是否已配置、是否具有凭据；新版额外返回可用的稳定非敏感 `accountSubject`，供工作空间绑定确认范围。
 - `api profile --json` 供工作台显示当前授权方式和可用的账号昵称、头像；不返回凭据，也不创建或归档业务任务。
