@@ -110,7 +110,7 @@ Import the workbench's schema v2 JSON using `task_operations.py import-review`. 
 
 ### 5a. Persist pairing decisions before identification
 
-照片配对审核使用独立的 `pairing/decisions.jsonl` 与交接包，不能复用收藏审核决定。低于 0.85 的配对、缺面、冲突或图片重用必须先经配对审核。配对审核台可以批量生成浏览器草稿，但交接包仍必须为每个 `local_id` 提供独立决定；同一批次可带可选 `batchActionId`，导入时记录为交互批次关联，不能作为单条“批量决定”替代逐项事件。默认从页面只读 WebMCP 工具 `get_pending_pairing_decisions` 取得当前包；该工具没有输入、不能写入任务包，也不能替代 `import-pairing`。若 WebMCP 缺失、注册失败或调用失败，才使用用户导出的同 schema JSON。导入时必须验证 dataset fingerprint、item version、来源存在性和活动本地图片的唯一归属；配对变化递增 `dataset_revision` 并使相关识别、审核与未执行计划过期。
+照片配对审核使用独立的 `pairing/decisions.jsonl`。低于 0.85 的配对、缺面、冲突或图片重用必须先经配对审核。正式工作台 `add` 页保存后，读取任务包最新决定和 revision。对于用户在对话中明确作出的决定或已经存在的历史配对交接包，使用 `import-pairing` 校验并持久化。每个 `local_id` 必须有独立决定，同批次可共享 `batchActionId`。导入时必须验证 dataset fingerprint、item version、来源存在性和活动本地图片的唯一归属。配对变化递增 `dataset_revision` 并使相关识别、审核与未执行计划过期。
 
 ### 6. Build and confirm an online plan
 
