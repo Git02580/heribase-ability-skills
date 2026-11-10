@@ -228,7 +228,7 @@ class WorkspaceService:
             common = ("taskKey", "expectedRevision")
             if path == "/api/tasks/identification-plan":
                 fields(body, common, ("localIds",))
-                return self.executor.identification_plan(body["taskKey"], body["expectedRevision"], body.get("localIds"))
+                return self.connector.identification_plan(body)
             if path == "/api/tasks/identify":
                 fields(body, common + ("planHash", "localIds", "commandId"))
                 return self.executor.identify(body, actor)

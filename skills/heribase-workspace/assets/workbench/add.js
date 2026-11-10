@@ -5,7 +5,7 @@ import { eligibleForIdentification } from './bulk.js';
 const STORAGE_KEY = 'heribase.connector.add.v1';
 const SIDES = ['obverse', 'reverse'];
 const pendingStatuses = new Set(['sending', 'unknown', 'preparing', 'queued', 'running', 'reconcile_required', 'partial_failed']);
-const rejectedCodes = new Set(['stale_revision', 'revision_conflict', 'stale_plan', 'stale_snapshot', 'invalid_scope', 'invalid_selection', 'account_changed', 'account_required', 'not_eligible', 'review_conflict', 'operation_pending', 'connection_required', 'revision_mismatch', 'unauthenticated', 'collection_not_allowed', 'already_collected', 'confirmation_interrupted']);
+const rejectedCodes = new Set(['stale_revision', 'revision_conflict', 'stale_plan', 'stale_snapshot', 'invalid_scope', 'invalid_selection', 'account_changed', 'account_required', 'not_eligible', 'identify_quota_insufficient', 'review_conflict', 'operation_pending', 'connection_required', 'revision_mismatch', 'unauthenticated', 'collection_not_allowed', 'already_collected', 'confirmation_interrupted']);
 const e = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const freeze = (value) => {
@@ -116,7 +116,8 @@ export function friendlyAddError(error) {
   if (code === 'collection_not_allowed') return '收藏容量或权限不足，请在 HeriBase 中处理后重试。';
   if (code === 'review_conflict') return '资料与识别结果有差异，请先核对。';
   if (code === 'confirmation_interrupted') return '上次收藏未提交，请核对后重新加入收藏。';
-  if (code === 'not_eligible') return '当前账户暂时无法识别，请查看服务说明。';
+  if (code === 'not_eligible') return identificationQuotaIssue(error.detail?.eligibility) || '当前账号识别资格不足。';
+  if (code === 'identify_quota_insufficient') return '本次选择超过今日剩余额度，请减少勾选后再确认。';
   if (typeof code === 'string' && /^(cli_|connector_|API_)/.test(code)) return '操作未完成，请刷新进度。原因可在“更多”查看。';
   return error?.message || '操作未完成，请刷新进度。';
 }
@@ -639,15 +640,24 @@ export function createAddController({ request, storage, makeId = () => crypto.ra
       if (state.photoEditor) throw new Error('请先保存当前照片，再确认识别。');
       const plan = state.plan;
       if (!plan) throw new Error('请先检查连接，查看本次识别范围。');
-      if (plan.eligibility?.allowed === false) throw Object.assign(new Error('当前账户的识别资格不足，请先处理服务说明。'), { code: 'not_eligible' });
+      const quotaIssue = identificationQuotaIssue(plan.eligibility, plan.items.length);
+      if (quotaIssue) throw Object.assign(new Error(quotaIssue), { code: plan.eligibility?.allowed === false ? 'not_eligible' : 'identify_quota_insufficient' });
       if (state.taskKey !== plan.taskKey || state.task?.manifest.revision !== plan.revision || JSON.stringify(selectedItems(state, 'identify').map((item) => item.local_id)) !== JSON.stringify(plan.items.map((item) => item.localId))) {
         state.plan = null;
         throw new Error('照片或记录已更新。请重新点击“开始识别”，确认最新范围。');
       }
       return run('正在提交已确认的识别…', async () => {
-        const result = await submit('identify', { taskKey: plan.taskKey, expectedRevision: plan.revision, planHash: plan.hash, localIds: plan.items.map((item) => item.localId) });
-        state.plan = null;
-        return result;
+        try {
+          const result = await submit('identify', { taskKey: plan.taskKey, expectedRevision: plan.revision, planHash: plan.hash, localIds: plan.items.map((item) => item.localId) });
+          state.plan = null;
+          return result;
+        } catch (error) {
+          // 确认时可能已有其他设备消耗额度，用服务端复核结果替换旧预览。
+          if (state.taskKey === plan.taskKey && error.detail?.eligibility) {
+            state.plan = freeze({ ...plan, eligibility: clone(error.detail.eligibility) });
+          }
+          throw error;
+        }
       });
     },
     async collect() {
@@ -687,8 +697,40 @@ export function createAddController({ request, storage, makeId = () => crypto.ra
   };
 }
 
+const quotaCount = (value) => Number.isSafeInteger(value) && value >= 0;
+
+export function identificationQuotaIssue(eligibility, count) {
+  const remaining = eligibility?.remainingTimes;
+  if (remaining === 0 || eligibility?.allowed === false && (eligibility.reason === 'identify_limit' || eligibility.limitStatus > 0)) return '今日识别额度已用完';
+  if (eligibility?.allowed === false) return '当前账号识别资格不足';
+  if (quotaCount(remaining) && remaining < count) return `本次选了 ${count} 枚，今日还可识别 ${remaining} 枚`;
+  return '';
+}
+
+export function identificationQuotaNotice(eligibility, apiBaseUrl, count) {
+  const issue = identificationQuotaIssue(eligibility, count);
+  if (!issue) return '';
+  const { dailyLimit, usedTimes, remainingTimes } = eligibility || {};
+  const figures = [
+    quotaCount(dailyLimit) && quotaCount(usedTimes) ? `已用 ${usedTimes}/${dailyLimit} 次` : '',
+    quotaCount(remainingTimes) ? `剩余 ${remainingTimes} 次` : '',
+  ].filter(Boolean).join('，');
+  let guide = '';
+  try {
+    // 仅打开账户所绑定 API 的官方回流入口，拒绝任意外站、协议和凭据。
+    const base = new URL(apiBaseUrl);
+    const target = new URL(eligibility?.guide?.guideUrl || '', base);
+    if (['https:', 'http:'].includes(base.protocol) && target.origin === base.origin && !target.username && !target.password &&
+        target.pathname === '/agent/v1/app-guides/page' && target.searchParams.get('uri')) guide = target.href;
+  } catch { /* 无可用引导时仍展示额度与重新检查入口。 */ }
+  const next = eligibility?.allowed === false || remainingTimes === 0 ? '资料已保留，识别资格恢复后可以继续。' : '请减少勾选后再确认。';
+  return `<div class="note identify-quota-notice" role="status"><strong>${e(issue)}</strong><p>${figures ? `${e(figures)}。 ` : ''}${next}</p>${guide ? `<a class="button quiet small" href="${e(guide)}" target="_blank" rel="noopener noreferrer">在 HeriBase 查看额度</a>` : ''}</div>`;
+}
+
 export function identificationNotice(plan) {
   const count = plan.items?.length || 1;
+  const blocked = identificationQuotaNotice(plan.eligibility, plan.account?.apiBaseUrl, count);
+  if (blocked) return blocked;
   const remaining = plan.eligibility?.remainingTimes ?? plan.quota?.remainingTimes ?? plan.remainingTimes;
   const cost = plan.cost?.amount ?? plan.cost?.value ?? (typeof plan.cost === 'number' ? plan.cost : undefined);
   const required = plan.eligibility?.requiredTimes ?? plan.quota?.requiredTimes;
@@ -939,9 +981,12 @@ export function renderAdd(state) {
   const readyItems = identificationItems(state), reviewItems = items.filter((entry) => addIdentified(entry) && !addCollected(entry));
   const identifyScope = selectedItems(state, 'identify'), collectScope = selectedItems(state, 'collect');
   const canAct = enabled && !isOrganizing && !needsOrganization;
-  const identifyAction = state.plan && state.plan.eligibility?.allowed !== false
+  const lastIdentify = state.intents.identify?.operation?.data;
+  const eligibility = state.plan ? state.plan.eligibility : lastIdentify?.eligibility;
+  const quotaIssue = identificationQuotaIssue(eligibility, identifyScope.length);
+  const identifyAction = state.plan && !quotaIssue
     ? control(`识别这 ${identifyScope.length} 枚`, 'identify', !canAct || !identifyScope.length || state.persistenceError)
-    : control(state.busy ? '正在检查连接…' : '重新检查连接', 'preview', !canAct || !identifyScope.length);
+    : control(state.busy ? '正在检查…' : quotaIssue ? '重新检查额度' : '重新检查连接', 'preview', !canAct || !identifyScope.length);
   const collectAction = control(`加入收藏（${collectScope.length}）`, 'collect', !canAct || !collectScope.length || state.persistenceError);
   const groups = [
     ['识别结果', reviewItems, 'review'], ['待识别', readyItems, 'identify'],
@@ -957,12 +1002,12 @@ export function renderAdd(state) {
       return `<details class="add-result-group add-later" data-add-group="${key}" ${open ? 'open' : ''}><summary>${label} <span>${entries.length}</span></summary>${cards}</details>`;
     }
     if (key === 'review') return `<section class="add-result-group add-review-group"><div class="add-group-head"><h3>${label} <span>${entries.length}</span></h3>${collectAction}</div>${cards}<p class="add-review-caption">核对币种、年份和面额后加入收藏 · 图片识别不代表鉴真。</p></section>`;
-    if (key === 'identify') return `<section class="add-result-group add-identify-group"><div class="add-group-head"><h3>${label} <span>${entries.length}</span></h3>${identifyAction}</div><div class="add-next add-group-note" aria-label="下一步">${state.plan ? identificationNotice(state.plan) : ''}${state.plan?.eligibility?.allowed === false ? '<p class="note">当前账户暂时无法识别。</p>' : ''}</div>${cards}</section>`;
+    if (key === 'identify') return `<section class="add-result-group add-identify-group"><div class="add-group-head"><h3>${label} <span>${entries.length}</span></h3>${identifyAction}</div><div class="add-next add-group-note" aria-label="下一步">${state.plan ? identificationNotice(state.plan) : identificationQuotaNotice(eligibility, lastIdentify?.account?.apiBaseUrl, identifyScope.length)}</div>${cards}</section>`;
     return `<section class="add-result-group"><h3>${label} <span>${entries.length}</span></h3>${cards}</section>`;
   }).join('')}</section>` : '';
   const advanced = state.taskKey ? `<details class="add-advanced"><summary>更多</summary><div class="actions"><a class="button quiet small" href="${e(route('review', state.taskKey, item?.local_id))}">详细核对</a><a class="button quiet small" href="${e(route('operations', state.taskKey))}">执行记录</a><a class="button quiet small" href="${e(route('inputs', state.taskKey))}">原始资料</a></div>${state.diagnostic ? `<details><summary>错误详情</summary><p>${e(state.diagnostic.code)}</p><p>${e(state.diagnostic.message)}</p></details>` : ''}</details>` : '';
   const noMatch = state.intents.identify?.operation?.data?.itemResults?.some((result) => result.status === 'recognition_failed');
-  const failed = ['identify', 'collect'].map((kind) => state.intents[kind]).find((intent) => ['failed', 'blocked'].includes(intent?.status));
+  const failed = ['identify', 'collect'].map((kind) => state.intents[kind]).find((intent) => ['failed', 'blocked'].includes(intent?.status) && !intent.operation?.data?.eligibility);
   const mainContent = `${progress}${hasInputs && !state.photoEditor && !isOrganizing && !blocked && ['waiting', 'failed'].includes(summary.phase) ? `<div class="add-organization-retry">${control('重新整理', 'organize', state.busy, 'quiet small')}</div>` : ''}${needsOrganization && !items.length && !state.uploadProgress ? `<section class="add-saved"><h2>已保存 ${summary.uploaded} 份资料</h2>${sourceGallery(state)}</section>` : ''}${group}${noMatch && !identified && !blocked ? '<div class="note"><strong>这次未识别出具体币种</strong><p>请换一张更清晰的照片。</p></div>' : ''}${failed && !blocked && !done ? `<div class="note"><strong>上次操作未完成</strong><p>${e(failed.operation?.data?.message || '请稍后重试。')}</p></div>` : ''}`;
   return `<div class="add-page"><div class="page-head"><h1>添加钱币</h1><a class="button quiet" href="#library">我的收藏 →</a></div>${state.error ? `<div class="note add-error" role="alert">${e(state.error)}</div>` : ''}${state.persistenceError ? '<div class="note" role="alert">浏览器无法保存进度，请允许本地存储后刷新。</div>' : ''}${state.missing ? '<div class="note" role="alert">暂未读到记录，请刷新。</div>' : ''}${hasInputs ? `<div class="add-work-layout"><div class="add-work-main" aria-label="处理结果">${mainContent}</div><aside class="add-work-aside" aria-label="补充与原件">${renderIntake(enabled, true)}${state.uploadRemainder?.length && !state.busy ? `<div class="note" role="alert">还有 ${state.uploadRemainder.length} 份资料尚未确认保存：${state.uploadRemainder.map(e).join('、')}</div>` : ''}<details class="add-originals"><summary>上传原件（${summary.uploaded}）</summary>${sourceGallery(state)}</details>${control('刷新进度', 'refresh', state.busy, 'quiet small')}</aside></div>` : renderIntake(enabled, false)}${advanced}</div>`;
 }

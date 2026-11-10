@@ -93,6 +93,40 @@ class ExecutorTests(unittest.TestCase):
         self.cli = FakeCLI()
         self.executor = WorkspaceExecutor(self.store, self.tasks, self.cli, background=False)
 
+    def add_second_quota_candidate(self):
+        front = self.ingest('quota-front.png', b'quota-front-image')
+        back = self.ingest('quota-back.png', b'quota-back-image')
+        current = self.tasks.snapshot(self.key)
+        pair = [{'sourceId': front['source']['source_id'], 'role': 'obverse'},
+                {'sourceId': back['source']['source_id'], 'role': 'reverse'}]
+        current = self.tasks.create_candidate(self.key, current['manifest']['revision'], [side['sourceId'] for side in pair],
+                                              '另一枚钱币', 'user:web')
+        self.tasks.pair(self.key, current['manifest']['revision'], current['items'][-1]['local_id'], 'confirm_pair', pair, 'user:web')
+
+    def test_known_quota_blocks_upload_before_confirmation(self):
+        self.add_second_quota_candidate()
+        current = self.tasks.snapshot(self.key)
+        plan = self.executor.identification_plan(self.key, current['manifest']['revision'])
+        self.executor.query = lambda argv: {'allowed': True, 'dailyLimit': 3, 'usedTimes': 2, 'remainingTimes': 1}
+        with self.assertRaises(WorkspaceError) as caught:
+            self.executor.identify(dict(taskKey=self.key, expectedRevision=plan['revision'], planHash=plan['hash'],
+                                        localIds=[i['localId'] for i in plan['items']], commandId='over-quota'), 'user:web')
+        self.assertEqual(caught.exception.code, 'identify_quota_insufficient')
+        self.assertFalse(any(call[:2] == ['file', 'upload'] for call in self.cli.calls))
+
+    def test_remote_quota_rejection_blocks_batch_without_reconciliation_or_retry(self):
+        self.add_second_quota_candidate()
+        current = self.tasks.snapshot(self.key)
+        plan = self.executor.identification_plan(self.key, current['manifest']['revision'])
+        quota = {'reason': 'identify_limit', 'allowed': False, 'dailyLimit': 3, 'usedTimes': 3, 'remainingTimes': 0}
+        self.cli.api_error = {'code': 'API_ERROR', 'businessCode': 409, 'message': 'identify_limit', 'data': quota}
+        op = self.executor.identify(dict(taskKey=self.key, expectedRevision=plan['revision'], planHash=plan['hash'],
+                                         localIds=[i['localId'] for i in plan['items']], commandId='remote-quota'), 'user:web')
+        self.assertEqual(op['data']['status'], 'blocked')
+        self.assertEqual(op['data']['eligibility'], quota)
+        self.assertEqual(self.cli.identify_count, 1)
+        self.assertEqual(sum(call[:2] == ['file', 'upload'] for call in self.cli.calls), 2)
+
     def test_confirm_identify_review_collect_and_reopen(self):
         current = self.tasks.snapshot(self.key)
         plan = self.executor.identification_plan(self.key, current['manifest']['revision'])

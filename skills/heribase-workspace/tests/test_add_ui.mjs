@@ -571,6 +571,18 @@ test('quota disclosure distinguishes returned zero credits, consumption, price a
   assert.doesNotMatch(html, /承诺免费/);
 });
 
+test('exhausted quota shows real counts and a safe guide instead of promising an upload', () => {
+  const eligibility = { allowed: false, dailyLimit: 3, usedTimes: 3, remainingTimes: 0,
+    guide: { guideUrl: '/agent/v1/app-guides/page?uri=fixture' } };
+  const html = identificationNotice({ items: [{}], eligibility, account: { apiBaseUrl: 'https://api.example.test' } });
+  assert.match(html, /今日识别额度已用完/);
+  assert.match(html, /已用 3\/3 次/);
+  assert.match(html, /https:\/\/api.example.test\/agent\/v1\/app-guides\/page/);
+  assert.doesNotMatch(html, /将上传/);
+  eligibility.guide.guideUrl = 'https://other.example/agent/v1/app-guides/page?uri=fixture';
+  assert.doesNotMatch(identificationNotice({ eligibility, account: { apiBaseUrl: 'https://api.example.test' } }), /other.example/);
+});
+
 test('missing local intent persistence blocks a remote write before dispatch', async () => {
   const storage = { getItem: () => null, setItem: () => { throw new Error('blocked'); } };
   const { controller, service } = await prepared({ storage });

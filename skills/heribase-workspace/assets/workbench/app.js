@@ -1,4 +1,4 @@
-import { createAddController, renderAdd, friendlyAddError, editablePhotos, hasPendingAdd } from './add.js';
+import { createAddController, renderAdd, friendlyAddError, editablePhotos, hasPendingAdd, identificationQuotaNotice } from './add.js';
 import { reviewImages, reviewDecision, reviewLabels, reviewBatch } from './review.js';
 import * as api from './api.js';
 import {
@@ -1432,6 +1432,12 @@ document.addEventListener('click', async (e) => {
       selectionFor(model).ids = new Set(ids);
       drawBulk();
       const plan = await api.request('/api/tasks/identification-plan', taskBody({ localIds: ids }));
+      const quotaNotice = identificationQuotaNotice(plan.eligibility, plan.account?.apiBaseUrl, plan.items.length);
+      if (quotaNotice) {
+        model.pendingPlan = null;
+        dialog('识别额度', quotaNotice, button('重新检查额度', 'identify-preview', 'quiet'));
+        return;
+      }
       dialog(
         '确认上传与识别',
         `<p>本次处理 ${plan.items.length} 枚；确认后会上传图片并逐枚识别。</p><ul class="dialog-list">${plan.items.map((i) => `<li>${esc(i.title)}<span>正反面齐全</span></li>`).join('')}</ul><p class="muted">费用及批量剩余额度以服务返回为准；未知项不作承诺。</p>`,
@@ -1440,10 +1446,16 @@ document.addEventListener('click', async (e) => {
       model.pendingPlan = plan;
     }
     if (action === 'identify-run') {
-      await change(
-        '/api/tasks/identify',
-        taskBody({ planHash: model.pendingPlan.hash, localIds: model.pendingPlan.items.map((i) => i.localId), commandId: crypto.randomUUID() }),
-      );
+      const plan = model.pendingPlan;
+      try {
+        await change('/api/tasks/identify', taskBody({ planHash: plan.hash, localIds: plan.items.map((i) => i.localId), commandId: crypto.randomUUID() }));
+      } catch (error) {
+        const quotaNotice = identificationQuotaNotice(error.detail?.eligibility, plan.account?.apiBaseUrl, plan.items.length);
+        if (!quotaNotice) throw error;
+        model.pendingPlan = null;
+        dialog('识别额度', quotaNotice, button('重新检查额度', 'identify-preview', 'quiet'));
+        return;
+      }
       go('operations', model.task.manifest.task_key);
     }
     if (action === 'collection-preview') {

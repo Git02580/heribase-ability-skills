@@ -172,6 +172,10 @@ class ConnectorClient:
         item = single_item(task)
         plan = self.request(self.home, "/api/connector/identification-plan", {"taskKey": key,
             "expectedRevision": task["manifest"]["revision"], "localIds": [item["local_id"]]})
+        eligibility = plan.get("eligibility") or {}
+        if eligibility.get("allowed") is False or (type(eligibility.get("remainingTimes")) is int and eligibility["remainingTimes"] == 0):
+            return {**describe(task), "stage": "identification_limited", "nextAction": "check_identification_eligibility",
+                    "plan": plan, "message": "当前无法识别，资料已保留。请根据服务返回的额度和引导处理，之后重新检查。"}
         return {**describe(task), "stage": "awaiting_identification_confirmation", "nextAction": "identify",
                 "plan": plan, "confirmation": "确认后将上传这两张已归档照片并请求识别，可能消耗当前账户识别额度；实际资格以服务端为准。"}
 

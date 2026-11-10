@@ -111,6 +111,13 @@ def result_value(raw, allow_recognition_no_match=False):
         raise WorkspaceError('cli_invalid_output', 'CLI 结果必须是对象', 409)
     error = value.get('error') or {}
     failure_code = error.get('apiCode') or error.get('code') or error.get('businessCode')
+    if value.get('status') == 'failed' and not error.get('reconciliationRequired'):
+        detail = error.get('data')
+        detail = detail if isinstance(detail, dict) else {}
+        if ('identify_limit' in (detail.get('reason'), error.get('apiCode'), error.get('message'))
+                and (error.get('businessCode') == 409 or error.get('apiCode') == 'identify_limit')):
+            raise WorkspaceError('identify_limit', '今日识别额度已用完，已暂停剩余识别。', 409,
+                                 eligibility={**detail, 'allowed': False})
     # 仅识别命令可把这个精确业务错误视作一次已完成的识别尝试；其它命令仍按失败处理。
     if allow_recognition_no_match and is_recognition_no_match(value):
         return value, None
@@ -595,8 +602,14 @@ class WorkspaceExecutor:
             if body['planHash'] != plan['hash'] or body['localIds'] != [i['localId'] for i in plan['items']]:
                 raise WorkspaceError('stale_plan', '识别清单已变化，请重新检查范围', 409)
             eligibility = self.query(['identify', 'eligibility'])
-            if isinstance(eligibility, dict) and eligibility.get('allowed') is False:
-                raise WorkspaceError('not_eligible', '当前识别资格不足，请查看服务端说明', 409, eligibility=eligibility)
+            if isinstance(eligibility, dict):
+                if eligibility.get('allowed') is False:
+                    raise WorkspaceError('not_eligible', '今日识别额度已用完。', 409, eligibility=eligibility)
+                remaining = eligibility.get('remainingTimes')
+                # 缺值表示服务未给出数值。只有明确余量不足才阻止整个已确认范围。
+                if type(remaining) is int and 0 <= remaining < len(plan['items']):
+                    raise WorkspaceError('identify_quota_insufficient', f'今日还可识别 {remaining} 枚，请减少勾选后再确认。', 409,
+                                         eligibility=eligibility)
             binding = self.store.get_entity('task-account', body['taskKey'])
             if binding and binding['data'] != plan['account']:
                 raise WorkspaceError('account_changed', '当前账户与此任务已有账户绑定不同', 409)
@@ -1263,6 +1276,10 @@ class WorkspaceExecutor:
                                 'error': {'code': exc.code, 'message': str(exc)}, 'updatedAt': self.store.timestamp(),
                             }
                         continue
+                    if exc.code == 'identify_limit' and data.get('eligibility'):
+                        # 已知额度拒绝不会产生远端识别。这里仅恢复本批其他已提交的记录。
+                        unresolved_local_ids.discard(local_id)
+                        continue
                     if exc.code == 'cli_not_completed':
                         if data['kind'] == 'identify' and local_id:
                             # 当前候选保持待核验，继续处理其他安全的未提交候选。
@@ -1297,6 +1314,11 @@ class WorkspaceExecutor:
                     message='已核验归档结果；正在按原确认范围继续未完成条目',
                 )
                 data = self.store.get_entity('operation', operation_id)['data']
+
+            if data['kind'] == 'identify' and data.get('eligibility'):
+                if unresolved_local_ids:
+                    return self.update(operation_id, message='额度已用完，仍有已提交的结果待核验。')
+                return self.update(operation_id, status='blocked', message='已核验已提交的结果；额度恢复后请重新确认待识别条目。')
 
             if (
                 (retryable_failure or definite_failure or unresolved_local_ids)
@@ -1397,13 +1419,23 @@ class WorkspaceExecutor:
                         self.update(operation_id, status='partial_failed', message=f"{len(failed)} 条明确失败，已跳过并完成其余条目；可重试失败项")
                 else:
                     self.update(operation_id, status='completed', message=completion_message or '本次范围已执行并归档')
-            except Exception as exc:
+            except WorkspaceError as exc:
+                if exc.code == 'identify_limit':
+                    data = self.store.get_entity('operation', operation_id)['data']
+                    unresolved = any(item.get('status') == 'reconcile_required' for item in data.get('itemResults', []))
+                    # 额度拒绝没有产生识别结果。结束剩余范围，同时保留前面真正待核验的条目。
+                    self.update(operation_id, status='reconcile_required' if unresolved else 'blocked',
+                                message=str(exc), eligibility=exc.details['eligibility'])
+                else:
+                    self.update(operation_id, status='failed' if exc.code == 'cli_definite_failure' else 'reconcile_required',
+                                message=str(exc))
+            except Exception:
                 # 包括成功响应之后、本地写入之前的崩溃窗口。保留 stdout 和计划，
                 # 由只读核验确认后再归档；绝不能据此把请求作为确定失败重发。
                 self.update(
                     operation_id,
-                    status='failed' if isinstance(exc, WorkspaceError) and exc.code == 'cli_definite_failure' else 'reconcile_required',
-                    message=str(exc) if isinstance(exc, WorkspaceError) else '执行或本地归档中断，请先核验；未重做请求。',
+                    status='reconcile_required',
+                    message='执行或本地归档中断，请先核验；未重做请求。',
                 )
 
         if self.background:

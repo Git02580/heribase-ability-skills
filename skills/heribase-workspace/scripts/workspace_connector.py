@@ -145,7 +145,7 @@ class WorkspaceConnector:
     def identification_plan(self, body):
         with self.executor.lock:
             self.executor.assert_idle(body["taskKey"])
-            plan = self.executor.identification_plan(body["taskKey"], body["expectedRevision"], body["localIds"])
+            plan = self.executor.identification_plan(body["taskKey"], body["expectedRevision"], body.get("localIds"))
             # Read-only preflight stays outside the immutable source/account hash.
             # Execution rechecks it before reserving any remote write.
             try:
