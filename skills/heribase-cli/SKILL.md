@@ -1,6 +1,6 @@
 ---
 name: heribase-cli
-description: Use the installed HeriBase CLI safely for authentication, image upload, coin identification, collection management, appraisal submission using existing credits, tracking, Daily Coin, App guides, local task control, and machine-readable JSON results.
+description: Install and initialize HeriBase skills, check runtime dependencies, and guide first use and login. Use the bundled CLI for authentication, image upload, coin identification, collection management, appraisal using existing credits, tracking, Daily Coin, App guides, local tasks, and machine-readable JSON results.
 compatibility: Installed HeriBase CLI; companion heribase-task-package is required for persistent coin workflows.
 metadata:
   short-description: HeriBase CLI 命令与 JSON 契约
@@ -14,15 +14,17 @@ CLI Skill 本身绝不读取或修改 `~/.heribase` 中的文件。任务包例�
 
 ## 安装与环境依赖
 
-首次使用或出现环境错误时，按 [安装与环境检查](references/installation.md) 执行本 Skill 的 `scripts/setup.py --check`；缺少 Python 依赖时执行 `--install`。六个 skills 必须完整同级安装。
+用户要求安装、初始化或首次使用时，按 [安装与初始化](references/installation.md) 完整同级安装六个 skills，并在实际安装目录执行本 Skill 的 `scripts/setup.py --init`。由 Agent 连续完成环境检查、缺失依赖安装与配置初始化，不停在“文件已复制”，也不把剩余命令交给用户手工执行。Python/Node 等基础程序缺失时按安装说明补齐，再重跑。仅排查环境使用只读的 `--check`。
+
+`--init` 成功后，将返回的 `onboarding` 转成简短自然语言：说明本地准备完成，给出可以做的事情和直接对话示例。`initialization.authenticated` 为 false 时使用 `loginPrompt` 邀请现在登录，也允许先整理本地照片；不要把未登录报成初始化失败。为 true 时跳过登录邀请。若用户已有具体任务，简短提示后继续该任务，不重复完整欢迎引导。`ok` 为 false 时说明实际失败项并修复，不能报告初始化完成。
 
 检查输出的 `python` 是后续所有 HeriBase Python 脚本应使用的解释器；安装依赖后它指向本 Skill 的 `.venv`。不要重新使用缺少依赖的系统 Python。CLI 可直接通过 `node <本 Skill 绝对目录>/bin/heribase` 调用，下文的 `heribase` 命令均可替换为这个前缀，无须先改全局 PATH。Node.js 需要 24+；Windows 也采用同一 Node 调用方式。
 
 ## 使用前检查
 
 1. 先执行 `heribase status --json`。
-2. 首次使用由 CLI 自动初始化 `https://api.heribase.com`；不要要求普通用户提供 API 地址。已有配置保持不变，只有用户需要自定义服务地址时才执行 `heribase configure --api-base-url <url>`。
-3. 未登录或服务端返回未授权时，请用户执行 `heribase login`。该命令会启动浏览器登录，Agent 不应替代用户完成认证。
+2. 首次使用由 `setup.py --init` 完成默认配置：仅当 CLI 明确返回未配置时，调用 `heribase configure --api-base-url https://api.heribase.com`。不要要求普通用户提供 API 地址，也不要把其他错误当作未配置。已有配置保持不变；用户需要自定义服务地址时才另行配置。
+3. `status` 返回本机保存的登录状态，不验证凭据是否过期；当前 CLI 执行该命令时可能启动或连接本地 daemon。初始化时将登录作为可选下一步；用户选择现在登录，或即将执行需要账户的在线操作且尚未登录时，由 Agent 运行 `heribase login` 并请用户完成浏览器认证，成功后再查 `status --json`。不要要求用户自己找命令，也不要替代用户认证。服务端返回未授权时重新引导登录。
 4. 所有业务、任务和诊断调用都使用 `--json`，只解析 stdout 中唯一的 JSON 文档；stderr 仅用于诊断，绝不从中提取业务结果。
 
 认证 token 仅由 CLI 保存于 `~/.heribase/auth.json`。不要将 token 传入命令、日志、提示词、临时文件或外部服务。

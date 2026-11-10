@@ -19,10 +19,10 @@ heribase logout
 heribase status --json
 ```
 
-- 首次使用自动初始化官方 API `https://api.heribase.com`；已有配置优先，首次初始化的 `HERIBASE_API_BASE_URL` 可覆盖默认值。帮助和版本查询不创建配置。
-- `configure` 用于自定义 API 地址、语言和最大 Worker 数；普通用户可直接 `login`，无需先配置。它不会保存 token。
+- 安装后的 `setup.py --init` 会在 CLI 明确返回未配置时，调用 `configure` 初始化官方 API `https://api.heribase.com`。已有配置保留，CLI 也支持通过 `HERIBASE_API_BASE_URL` 初始化缺失配置。帮助和版本查询不创建配置。
+- `configure` 保存 API 地址、语言和最大 Worker 数，不保存 token。初始化完成后普通用户可直接 `login`，无需手工配置。
 - `login` 打开浏览器并接收本机回调；需要用户完成网页登录。
-- `status --json` 用于确认 CLI 是否已配置、是否具有凭据；新版额外返回可用的稳定非敏感 `accountSubject`，供工作空间绑定确认范围。
+- `status --json` 读取本地配置和已保存的登录凭据；当前 CLI 可能启动或连接本地 daemon，但不会验证远端凭据有效期。配置缺失时按明确的未配置错误执行初始化。额外返回可用的稳定非敏感 `accountSubject`，供工作空间绑定确认范围。
 - `api profile --json` 供工作台显示当前授权方式和可用的账号昵称、头像；不返回凭据，也不创建或归档业务任务。
 - 服务端返回未授权时，让用户重新登录，不尝试刷新或手工编辑 token。
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""检查 HeriBase 环境，或显式安装 Python 依赖；随 skill 分发即可运行。"""
+"""检查、补齐 HeriBase 环境并初始化；随 skill 分发，从实际安装目录运行。"""
 from __future__ import annotations
 
 import argparse
@@ -114,8 +114,8 @@ def prepare_cli(cli):
     bundle = cli / "bin/heribase"
     if not bundle.is_file() or bundle.is_symlink():
         raise RuntimeError("缺少普通文件 bin/heribase，请重新安装完整 skills")
-    if os.name != "nt":
-        bundle.chmod(bundle.stat().st_mode | 0o100)
+    # CLI 由维护方独立打包，安装过程保留其内容和权限；各平台均通过 Node
+    # 运行该文件，无需为它补执行权限，也不在这里重建或修补产物。
     # 使用相对脚本位置且保留引号，使中文/空格路径在 Windows 正常工作。
     wrapper = cli / "bin/heribase.cmd"
     if wrapper.is_symlink():
@@ -123,11 +123,66 @@ def prepare_cli(cli):
     wrapper.write_bytes(b'@echo off\r\nnode "%~dp0heribase" %*\r\nexit /b %errorlevel%\r\n')
 
 
+def initialize(skills):
+    """完成本地准备；登录留给用户选择，不把未登录视作安装失败。"""
+    report = check_environment(skills)
+    # 先确认整套技能与 Node 可用，避免在不完整的安装中反复下载 Python 依赖。
+    if any(not item["ok"] for item in report["checks"]
+           if item["name"] not in ("python", "dependencies")):
+        return report
+    if not report["ok"]:
+        install_dependencies(skills / "heribase-cli")
+        report = check_environment(skills)
+        if not report["ok"]:
+            return report
+    prepare_cli(skills / "heribase-cli")
+    try:
+        # 仅使用随附 CLI 的公开命令，不直接读写 .heribase。支持 CLI 自行初始化，
+        # 也兼容返回明确“未配置”的既有产物；其他错误绝不能当作配置缺失。
+        result = _run([*report["cli"], "status", "--json"])
+        if (result.returncode and result.stderr.strip()
+                == "HeriBase CLI is not configured. Run heribase configure --api-base-url <url>."):
+            # 不无条件 configure，以免覆盖用户已有的自定义地址。
+            configured = _run([*report["cli"], "configure", "--api-base-url", "https://api.heribase.com"])
+            if configured.returncode:
+                raise ValueError("configure failed")
+            result = _run([*report["cli"], "status", "--json"])
+        if result.returncode:
+            raise ValueError("status failed")
+        status = json.loads(result.stdout)
+        if (not isinstance(status, dict)
+                or not isinstance(status.get("api_base_url"), str)
+                or not status["api_base_url"].strip()
+                or not isinstance(status.get("authenticated"), bool)):
+            raise ValueError("invalid status")
+    except (OSError, subprocess.SubprocessError, ValueError):
+        report["ok"] = False
+        # 不转储 CLI 输出或认证文件；保留独立的环境检查结果，便于 Agent 定位失败阶段。
+        report["initialization"] = {"ok": False, "error": "环境检查已通过，但 CLI 状态读取失败；请检查 CLI 配置或本地 daemon 后重跑 --init"}
+        return report
+
+    authenticated = status["authenticated"]
+    report["initialization"] = {"ok": True, "apiBaseUrl": status["api_base_url"],
+                                "authenticated": authenticated}
+    report["onboarding"] = {
+        "message": "HeriBase 已安装并完成本地初始化。"
+                   + ("已检测到保存的登录状态，可以开始使用。" if authenticated else
+                      "你可以先整理钱币照片；在线识别、收藏、鉴定和行情查询需要登录。"),
+        "examples": ["帮我整理这些钱币照片，先让我核对正反面。",
+                     "识别这枚钱币，结果确认后再加入收藏。",
+                     "查看我的真人鉴定进度。",
+                     "查看我正在追踪的钱币行情。"],
+        "loginPrompt": None if authenticated else "要现在登录吗？也可以先发照片，体验本地整理。",
+    }
+    return report
+
+
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="检查 HeriBase 环境；--install 安装私有 Python 依赖和 CLI 启动入口")
+    parser = argparse.ArgumentParser(description="HeriBase 环境准备；安装后用 --init 完成依赖、默认配置和入门引导")
     action = parser.add_mutually_exclusive_group()
     action.add_argument("--check", action="store_true", help="只读检查（默认）")
     action.add_argument("--install", action="store_true", help="在 heribase-cli/.venv 安装依赖，然后检查")
+    action.add_argument("--init", action="store_true", help="检查并补齐依赖，初始化 CLI 配置，返回登录状态和入门引导")
     args = parser.parse_args(argv)
     # 从安装后的实际位置定位同级 skills，不能依赖仓库路径或调用者的 cwd。
     skills = Path(__file__).resolve().parents[2]
@@ -138,7 +193,7 @@ def main(argv=None):
                 raise RuntimeError("请先同级安装六个 skills，缺少：" + ", ".join(missing))
             install_dependencies(skills / "heribase-cli")
             prepare_cli(skills / "heribase-cli")
-        report = check_environment(skills)
+        report = initialize(skills) if args.init else check_environment(skills)
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["ok"] else 1
     except (RuntimeError, OSError, subprocess.SubprocessError) as exc:

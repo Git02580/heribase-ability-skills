@@ -37,7 +37,7 @@ metadata:
 
 ## 安装与环境依赖
 
-本 Skill 需要 Python 3.9+、桌面浏览器，以及可用的 `heribase-task-package` 和 `heribase-cli`。基础环境、CLI 安装和健康检查见 [统一安装说明](../HERIBASE_INSTALL.md)。
+本 Skill 需要 Python 3.9+、桌面浏览器，以及可用的 `heribase-task-package` 和 `heribase-cli`。基础环境、CLI 安装和初始化见 [统一安装说明](../heribase-cli/references/installation.md)。
 
 ## 不可违反的边界
 

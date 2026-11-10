@@ -18,7 +18,7 @@ It does not identify coins by itself and does not proxy arbitrary CLI commands. 
 
 ## 安装与环境依赖
 
-本 Skill 需要 Python 3.9+ 与本地文件系统访问权限；执行线上操作时还依赖已安装的 `heribase-cli`。基础环境、CLI 安装和健康检查见 [统一安装说明](../HERIBASE_INSTALL.md)。
+本 Skill 需要 Python 3.9+ 与本地文件系统访问权限；执行线上操作时还依赖已安装的 `heribase-cli`。基础环境、CLI 安装和初始化见 [统一安装说明](../heribase-cli/references/installation.md)。
 
 ## Non-negotiable boundaries
 

@@ -12,7 +12,7 @@ metadata:
 
 ## 启动与绑定
 
-首次使用先按 [环境检查说明](../heribase-cli/references/installation.md) 执行 `heribase-cli/scripts/setup.py --check`。下文 `<python>` 使用检查输出的 `python` 绝对路径，确保工作台及其子进程使用已安装依赖的同一解释器。
+首次使用且尚未初始化时，按 [安装与初始化](../heribase-cli/references/installation.md) 执行 `heribase-cli/scripts/setup.py --init`；未登录可先整理本地照片，在线操作前再引导登录。后续环境排障用 `--check`。下文 `<python>` 使用输出的 `python` 绝对路径，确保工作台及其子进程使用已安装依赖的同一解释器。
 
 `<workspace>` 是当前已安装的本 Skill 绝对目录，不能假定开发仓库路径：
 
