@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/collection-plan.schema.json",
+  "title": "HeriBase collection plan v1",
+  "type": "object",
+  "required": ["schema_version", "plan_id", "task_key", "status", "operation_type", "created_at", "based_on", "items", "excluded", "impact", "payload_sha256", "authorization"],
+  "properties": {
+    "schema_version": {"const": "heribase.collection-plan.v1"},
+    "plan_id": {"type": "string"},
+    "task_key": {"type": "string"},
+    "status": {"enum": ["draft", "awaiting_confirmation", "authorized", "executing", "consumed", "cancelled", "stale"]},
+    "operation_type": {"enum": ["collection_add", "collection_update", "collection_cancel", "mixed"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "based_on": {"type": "object", "required": ["dataset_revision", "dataset_fingerprint"], "properties": {"dataset_revision": {"type": "integer", "minimum": 1}, "dataset_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}, "additionalProperties": false},
+    "items": {"type": "array", "items": {"type": "object", "required": ["local_id", "item_version", "decision_id", "identification_snapshot_id", "identify_uri", "user_uniq_uri", "display"], "properties": {"local_id": {"type": "string"}, "item_version": {"type": "integer", "minimum": 1}, "decision_id": {"type": ["string", "null"]}, "identification_snapshot_id": {"type": ["string", "null"]}, "identify_uri": {"type": ["string", "null"]}, "user_uniq_uri": {"type": ["string", "null"]}, "operation_type": {"enum": ["collection_add", "collection_update", "collection_cancel"]}, "collection_uri": {"type": ["string", "null"]}, "changes": {"type": "object"}, "display": {"type": "object"}}, "additionalProperties": false}},
+    "excluded": {"type": "array", "items": {"type": "object", "required": ["local_id", "reason"], "properties": {"local_id": {"type": "string"}, "reason": {"type": "string"}}, "additionalProperties": false}},
+    "impact": {"type": "object", "required": ["included", "excluded", "estimated_fee", "fee_unknown"], "properties": {"included": {"type": "integer", "minimum": 0}, "excluded": {"type": "integer", "minimum": 0}, "estimated_fee": {"type": ["number", "null"]}, "fee_unknown": {"type": "boolean"}}, "additionalProperties": true},
+    "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "authorization": {"anyOf": [{"type": "null"}, {"type": "object", "required": ["confirmed_by", "confirmed_at", "confirmed_payload_sha256"], "properties": {"confirmed_by": {"type": "string"}, "confirmed_at": {"type": "string", "format": "date-time"}, "confirmed_payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}, "additionalProperties": false}]}
+  },
+  "additionalProperties": false
+}

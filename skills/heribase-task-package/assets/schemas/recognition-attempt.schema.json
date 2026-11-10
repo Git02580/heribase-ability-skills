@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/recognition-attempt.schema.json",
+  "title": "HeriBase recognition attempt v1",
+  "type": "object",
+  "required": ["schema_version", "attempt_id", "task_key", "local_id", "attempt_number", "operation_type", "status", "input", "cli", "remote_task_id", "started_at", "finished_at", "exit_code", "classification", "raw_response_ref", "raw_response_sha256", "error", "sequence", "previous_event_sha256", "event_sha256"],
+  "properties": {
+    "schema_version": {"const": "heribase.recognition-attempt.v1"},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "task_key": {"type": "string"},
+    "local_id": {"type": "string"},
+    "attempt_number": {"type": "integer", "minimum": 1},
+    "operation_type": {"enum": ["identify", "query", "reconcile"]},
+    "status": {"enum": ["queued", "uploading", "requested", "polling", "succeeded", "failed_retryable", "failed_terminal", "cancelled", "unknown"]},
+    "input": {
+      "type": "object",
+      "required": ["item_version", "evidence"],
+      "properties": {
+        "item_version": {"type": "integer", "minimum": 1},
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["evidence_id", "sha256"],
+            "properties": {
+              "evidence_id": {"type": "string"},
+              "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cli": {"type": "object", "required": ["command", "args"], "properties": {"command": {"type": "string"}, "args": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
+    "remote_task_id": {"type": ["string", "null"]},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "exit_code": {"type": ["integer", "null"]},
+    "classification": {"type": ["string", "null"]},
+    "raw_response_ref": {"type": ["string", "null"]},
+    "raw_response_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "error": {"type": ["object", "null"]},
+    "sequence": {"type": "integer", "minimum": 1},
+    "previous_event_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "event_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

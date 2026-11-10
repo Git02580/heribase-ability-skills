@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase CLI"
+  short_description: "HeriBase 命令、JSON 输出与安全边界"
+  default_prompt: "Use $heribase-cli to check my HeriBase CLI status and explain the correct command for my next action."
+
+policy:
+  allow_implicit_invocation: false

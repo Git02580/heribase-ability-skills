@@ -1,0 +1,4 @@
+# pip 会根据 Python 版本选择兼容发行版；依赖安装在此 skill 的 .venv。
+Pillow>=11.3,<13
+openpyxl>=3.1.5,<4
+defusedxml>=0.7.1,<1

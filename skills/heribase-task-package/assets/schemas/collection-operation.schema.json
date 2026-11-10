@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/collection-operation.schema.json",
+  "title": "HeriBase collection operation v1",
+  "type": "object",
+  "required": ["schema_version", "operation_id", "attempt_id", "plan_id", "task_key", "local_id", "attempt_number", "operation_type", "status", "expected", "cli", "started_at", "finished_at", "exit_code", "classification", "raw_response_ref", "raw_response_sha256", "result", "error", "sequence", "previous_event_sha256", "event_sha256"],
+  "properties": {
+    "schema_version": {"const": "heribase.collection-operation.v1"},
+    "operation_id": {"type": "string"},
+    "attempt_id": {"type": "string"},
+    "plan_id": {"type": "string"},
+    "task_key": {"type": "string"},
+    "local_id": {"type": "string"},
+    "attempt_number": {"type": "integer", "minimum": 1},
+    "operation_type": {"enum": ["collection_add", "collection_update", "collection_cancel"]},
+    "status": {"enum": ["queued", "executing", "succeeded", "failed_retryable", "failed_terminal", "reconcile_required", "cancelled"]},
+    "expected": {"type": "object", "required": ["item_version", "identify_uri", "user_uniq_uri"], "properties": {"item_version": {"type": "integer", "minimum": 1}, "identify_uri": {"type": ["string", "null"]}, "user_uniq_uri": {"type": ["string", "null"]}}, "additionalProperties": false},
+    "cli": {"type": "object", "required": ["command", "args"], "properties": {"command": {"type": "string"}, "args": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "exit_code": {"type": ["integer", "null"]},
+    "classification": {"type": ["string", "null"]},
+    "raw_response_ref": {"type": ["string", "null"]},
+    "raw_response_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "result": {"type": ["object", "null"], "properties": {"collection_uri": {"type": ["string", "null"]}, "user_uniq_uri": {"type": ["string", "null"]}}, "additionalProperties": true},
+    "error": {"type": ["object", "null"]},
+    "sequence": {"type": "integer", "minimum": 1},
+    "previous_event_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "event_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

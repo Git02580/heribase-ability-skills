@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/review-export.schema.json",
+  "title": "HeriBase review workbench export v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "datasetFingerprint", "exportedAt", "summary", "decisions"],
+  "properties": {
+    "schemaVersion": {"const": 2},
+    "datasetFingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "exportedAt": {"type": "string", "format": "date-time"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collect", "needPhoto", "excluded"],
+      "properties": {
+        "collect": {"type": "integer", "minimum": 0},
+        "needPhoto": {"type": "integer", "minimum": 0},
+        "excluded": {"type": "integer", "minimum": 0}
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["recordId", "sourceRows", "decision", "updatedAt"],
+        "properties": {
+          "recordId": {"type": "string", "minLength": 1},
+          "sourceRows": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+          "decision": {"enum": ["collect", "need-photo", "exclude"]},
+          "updatedAt": {"type": "string", "format": "date-time"},
+          "source": {"enum": ["single", "bulk", "import"]},
+          "batchActionId": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

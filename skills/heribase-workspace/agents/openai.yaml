@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase 工作空间"
+  short_description: "在当前聊天中恢复钱币任务，按需打开照片与结果页面并保留操作进度"
+  default_prompt: "Use $heribase-workspace to resume the HeriBase task from this conversation and open its photos and results page when needed."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeriBase 配对确认</title>
+<style>
+  :root{--paper:#f5f1e8;--ink:#262a26;--muted:#696d65;--pine:#285842;--ochre:#8c5a10;--brick:#9e3f32;--line:#d7d1c5;--panel:#fffdf8}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}.top{padding:20px 28px;border-bottom:1px solid var(--line);background:var(--panel)}h1{margin:0;font:500 24px Georgia,"Songti SC",serif}.top p{margin:6px 0 0;color:var(--muted)}main{display:grid;grid-template-columns:330px 1fr;min-height:calc(100vh - 92px)}aside{padding:14px;border-right:1px solid var(--line);background:var(--panel)}.count,.bulk-toolbar{padding:10px 12px;margin-bottom:12px;border-left:4px double var(--ochre);background:#f5ead7;color:#70470f}.bulk-toolbar{border-left-color:var(--pine);background:#edf3ed;color:var(--ink)}.bulk-toolbar p{margin:0 0 8px;font-weight:600}.bulk-actions{display:flex;gap:6px;flex-wrap:wrap}.bulk-actions button{padding:6px 8px;border:1px solid var(--pine);background:transparent;color:var(--pine);cursor:pointer}.bulk-actions button[data-bulk-action="exclude"]{border-color:var(--brick);color:var(--brick)}.queue-row{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px}.queue-row input{margin:12px 0 0}.item{width:100%;padding:11px;margin:0;border:1px solid var(--line);background:transparent;text-align:left;cursor:pointer}.item:hover,.item.on{background:#f3eee3;border-color:var(--ink);box-shadow:inset 4px 0 var(--pine)}.item small{display:block;color:var(--muted);margin-top:4px}.body{padding:22px;max-width:1000px}.card{border:1px solid var(--line);background:var(--panel)}.head{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.images{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}.image{min-height:280px;background:#ece7dc;border:1px solid var(--line);display:grid;place-items:center}.image img{width:100%;height:100%;max-height:400px;object-fit:contain}.image select{margin:8px}.slab-label{margin:0 16px 16px;padding:12px;border:1px solid #d9c7a9;background:#fbf5ea}.slab-label h2{margin:0 0 6px;font:600 15px Georgia,"Songti SC",serif}.slab-label p{margin:0 0 8px;color:var(--muted)}.slab-label dl{display:grid;grid-template-columns:max-content 1fr;gap:5px 12px;margin:0}.slab-label dt{font-weight:600}.slab-label dd{margin:0}.slab-label small{color:var(--muted)}.actions{padding:0 16px 16px;display:flex;gap:8px;flex-wrap:wrap}button{font:inherit}.actions button{padding:8px 10px;border:1px solid var(--ink);background:transparent;cursor:pointer}.actions button:first-child{border-color:var(--pine);color:var(--pine)}.note{margin:0 16px 16px;padding:10px;border-left:4px solid var(--ochre);background:#f5ead7;color:#70470f}.bulk-message{margin:0 0 12px;padding:9px 12px;border-left:4px solid var(--pine);background:#edf3ed}.bulk-message:empty{display:none}@media(max-width:760px){main{display:block}.images{grid-template-columns:1fr}}
+</style>
+<body>
+<header class="top"><h1>配对确认</h1><p>确认照片是否属于同一枚硬币；如初始方向未知，请为两张图分别选正面和反面。</p></header>
+<main>
+  <aside>
+    <div class="count" id="count"></div>
+    <section class="bulk-toolbar" id="bulk-toolbar" aria-label="批量处理">
+      <p id="selection-count">已选 0 条</p>
+      <div class="bulk-actions">
+        <button type="button" data-select-status="review">全选需确认</button>
+        <button type="button" data-select-status="ready">全选自动就绪</button>
+        <button type="button" data-clear-selection>清空</button>
+        <button type="button" data-bulk-action="confirm_pair">批量确认配对</button>
+        <button type="button" data-bulk-action="need_photo">批量标记待补图</button>
+        <button type="button" data-bulk-action="exclude">批量排除</button>
+      </div>
+    </section>
+    <div id="queue"></div>
+  </aside>
+  <section class="body"><p class="bulk-message" id="bulk-message" role="status"></p><div id="body"></div></section>
+</main>
+<script src="pairing-data.js"></script>
+<script>
+  const d = window.COIN_PAIRING_DATA, r = d.records, q = document.querySelector("#queue"), b = document.querySelector("#body");
+  document.querySelector("#count").textContent = `${d.statusCounts.needs_review} 组需要人工确认 · ${d.statusCounts.auto_ready} 组自动就绪`;
+  function show(x) {
+    q.querySelectorAll(".item").forEach((e) => e.classList.toggle("on", e.dataset.id === x.id));
+    const slabLabel = x.slabLabel ? `<section class="slab-label"><h2>标签读取线索</h2><p>仅来自可见盒标，不是服务端识别结果。</p><dl>${x.slabLabel.fields.map((field) => `<dt>${field.name}</dt><dd>${field.normalizedValue || field.rawValue || "未读出"}<small> · 置信度 ${field.confidence ?? "未评估"}${field.evidenceRegion ? ` · ${field.evidenceRegion}` : ""}</small></dd>`).join("")}</dl></section>` : "";
+    b.innerHTML = `<article class=card><div class=head><b>${x.title}</b><span>${x.needsReview ? "需要确认" : "自动就绪"} · ${x.confidence}</span></div><div class=images>${x.evidence.map((e, i) => `<div class=image>${e.image ? `<img src="${e.image}" alt="${e.role}">` : "缺少本地图片"}<small>${i ? "照片 B" : "照片 A"} · ${e.role}</small><select class=role-select data-source-id="${e.sourceId}"><option value="unknown" ${e.role === "unknown" ? "selected" : ""}>方向待选</option><option value="obverse" ${e.role === "obverse" ? "selected" : ""}>正面</option><option value="reverse" ${e.role === "reverse" ? "selected" : ""}>反面</option></select></div>`).join("")}</div>${slabLabel}<p class=note>${x.warnings.join("；") || "自动配对证据完整。"}</p><div class=actions><button>确认是同一枚硬币</button><button>拆分为单面</button><button>重新选择配对照片</button><button>标记待补图</button><button>排除</button></div></article>`;
+  }
+  r.forEach((x, i) => {
+    const row = document.createElement("div"), checkbox = document.createElement("input"), itemButton = document.createElement("button");
+    row.className = "queue-row";
+    checkbox.className = "select-item"; checkbox.type = "checkbox"; checkbox.dataset.id = x.id; checkbox.setAttribute("aria-label", `选择 ${x.title}`);
+    itemButton.className = "item"; itemButton.dataset.id = x.id; itemButton.innerHTML = `<b>${x.title}</b><small>${x.needsReview ? "需人工确认" : "自动就绪"} · ${x.evidence.length} 张照片</small>`;
+    itemButton.onclick = () => show(x);
+    row.append(checkbox, itemButton); q.append(row); if (!i) show(x);
+  });
+</script>
+</body>
+</html>

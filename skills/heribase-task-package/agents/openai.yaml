@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase 任务包"
+  short_description: "创建、校验与恢复可审计的硬币任务包"
+  default_prompt: "使用 $heribase-task-package 将本次硬币整理工作保存为完整、自包含、可恢复并带线上写入闸门的任务包。"
+
+policy:
+  allow_implicit_invocation: true

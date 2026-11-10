@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/items.schema.json",
+  "title": "HeriBase normalized items v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_key", "revision", "updated_at", "items"],
+  "properties": {
+    "schema_version": {"const": "heribase.items.v1"},
+    "task_key": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 1},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "items": {"type": "array", "items": {"$ref": "#/$defs/item"}}
+  },
+  "$defs": {
+    "nullableUri": {"type": ["string", "null"], "minLength": 1},
+    "item": {
+      "type": "object",
+      "required": ["local_id", "item_key", "legacy_ids", "version", "status", "lineage", "source_refs", "evidence", "organization", "field_claims", "resolved_fields", "active_identification", "review_projection", "collection_projection", "attention_flags", "created_at", "updated_at"],
+      "properties": {
+        "local_id": {"type": "string", "minLength": 1},
+        "item_key": {"type": "string", "pattern": "^(?:local-[0-9]+|table-[0-9]+)$"},
+        "legacy_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "version": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["active", "superseded", "excluded", "source_incomplete", "identity_conflict", "archived"]},
+        "lineage": {"type": "object", "required": ["derived_from", "superseded_by"], "properties": {"derived_from": {"type": "array", "items": {"type": "string"}}, "superseded_by": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
+        "source_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "evidence": {"type": "array", "items": {"type": "object", "required": ["evidence_id", "source_id", "role", "is_primary", "pair_confidence", "rationale"], "properties": {"evidence_id": {"type": "string"}, "source_id": {"type": "string"}, "role": {"enum": ["obverse", "reverse", "slab", "label", "detail", "unknown"]}, "is_primary": {"type": "boolean"}, "pair_confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}, "rationale": {"type": ["string", "null"]}}, "additionalProperties": false}},
+        "organization": {
+          "type": "object",
+          "properties": {
+            "pairing_suggestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": ["source_ids", "relation", "confidence", "rationale", "supporting_signals", "conflicting_signals"],
+                "properties": {
+                  "source_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                  "relation": {"enum": ["opposite_faces", "same_face_duplicate", "same_coin_detail", "uncertain"]},
+                  "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                  "rationale": {"type": "string", "minLength": 1, "maxLength": 2000},
+                  "supporting_signals": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                  "conflicting_signals": {"type": "array", "items": {"type": "string", "minLength": 1}}
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "field_claims": {"type": "object"},
+        "resolved_fields": {"type": "object"},
+        "active_identification": {"anyOf": [{"type": "null"}, {"type": "object", "required": ["attempt_id", "snapshot_id", "status", "identify_uri", "user_uniq_uri", "raw_response_ref", "raw_response_sha256", "recognized_at"], "properties": {"attempt_id": {"type": "string"}, "snapshot_id": {"type": "string"}, "status": {"type": "string"}, "identify_uri": {"$ref": "#/$defs/nullableUri"}, "user_uniq_uri": {"$ref": "#/$defs/nullableUri"}, "raw_response_ref": {"type": "string"}, "raw_response_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "recognized_at": {"type": "string", "format": "date-time"}}, "additionalProperties": true}]},
+        "review_projection": {"type": ["object", "null"]},
+        "collection_projection": {"type": ["object", "null"]},
+        "attention_flags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

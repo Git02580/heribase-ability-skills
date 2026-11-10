@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/sources.schema.json",
+  "title": "HeriBase task sources v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_key", "revision", "updated_at", "sources"],
+  "properties": {
+    "schema_version": {"const": "heribase.sources.v1"},
+    "task_key": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 1},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "kind", "origin", "stored_path", "mime_type", "byte_size", "sha256", "acquired_at", "parent_source_id", "locator", "integrity_status"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["local_image", "spreadsheet", "document", "remote_image", "extracted_image"]},
+        "origin": {
+          "type": "object",
+          "required": ["type", "original_name", "original_path", "url"],
+          "properties": {
+            "type": {"enum": ["local", "remote", "spreadsheet_embedded"]},
+            "original_name": {"type": ["string", "null"]},
+            "original_path": {"type": ["string", "null"]},
+            "url": {"type": ["string", "null"]}
+          },
+          "additionalProperties": false
+        },
+        "stored_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "mime_type": {"type": "string", "minLength": 1},
+        "byte_size": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "acquired_at": {"type": "string", "format": "date-time"},
+        "parent_source_id": {"type": ["string", "null"]},
+        "locator": {"type": ["object", "null"], "properties": {"sheet": {"type": ["string", "null"]}, "row": {"type": ["integer", "null"], "minimum": 1}, "column": {"type": ["integer", "null"], "minimum": 1}, "cell": {"type": ["string", "null"]}, "relationship_id": {"type": ["string", "null"]}}, "additionalProperties": false},
+        "integrity_status": {"enum": ["verified", "missing", "mismatch", "pending"]}
+      }
+    }
+  }
+}

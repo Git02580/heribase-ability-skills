@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase 追踪"
+  short_description: "本人收藏追踪与真实行情记录"
+  default_prompt: "查看我的追踪记录和最新可查询行情。"
+
+policy:
+  allow_implicit_invocation: true

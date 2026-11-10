@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>HeriBase 硬币审核台</title>
+  <style>
+    :root {
+      --paper: #f5f1e8;
+      --ink: #262a26;
+      --muted: #696d65;
+      --pine: #285842;
+      --ochre: #8c5a10;
+      --brick: #9e3f32;
+      --line: #d7d1c5;
+      --panel: #fffdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    button, input, select { font: inherit; }
+
+    button {
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible, th[tabindex="0"]:focus-visible {
+      outline: 3px solid var(--ochre);
+      outline-offset: 2px;
+    }
+
+    .page-shell {
+      width: min(1540px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 22px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { min-width: 0; }
+    .brand h1 { margin: 0; font-size: 22px; letter-spacing: .08em; }
+    .build-meta, .refresh-hint { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .refresh-hint { max-width: 420px; }
+
+    .view-switcher { display: inline-flex; flex: 0 0 auto; border: 1px solid var(--ink); }
+    .view-switcher button {
+      min-height: 34px;
+      padding: 6px 13px;
+      border: 0;
+      border-left: 1px solid var(--ink);
+      background: transparent;
+    }
+    .view-switcher button:first-child { border-left: 0; }
+    .view-switcher button[aria-selected="true"] { background: var(--ink); color: var(--panel); }
+
+    .handoff-area {
+      display: grid;
+      flex: 0 1 310px;
+      gap: 4px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .handoff-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .handoff-area button { min-height: 32px; padding: 5px 9px; border: 1px solid var(--pine); background: transparent; color: var(--pine); }
+    .handoff-area button:hover { background: var(--pine); color: var(--panel); }
+    .handoff-status { margin: 0; color: var(--muted); font-size: 12px; }
+    .handoff-status[data-level="ready"] { color: var(--pine); }
+    .handoff-status[data-level="warning"] { color: var(--ochre); }
+    .handoff-status[data-level="error"] { color: var(--brick); }
+
+    .status-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .count-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 8px;
+      min-height: 88px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-left-width: 5px;
+      background: var(--panel);
+      box-shadow: 0 2px 6px rgba(38, 42, 38, .05);
+    }
+    .count-card:has(.count-card__filter[aria-pressed="true"]) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+    .count-card__filter { display: block; min-width: 0; padding: 0; border: 0; background: transparent; text-align: left; }
+    .count-card__batch { align-self: end; padding: 4px 7px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 12px; }
+    .count-card__filter:hover .count-card__label, .count-card__batch:hover { color: var(--ink); }
+    .count-card--collect { border-left-color: var(--pine); }
+    .count-card--review { border-left-color: var(--ochre); border-left-style: double; }
+    .count-card--normal { border-left-color: var(--muted); }
+    .count-card--unidentified { border-left-color: var(--brick); border-top-style: dashed; }
+    .count-card__label { display: block; color: var(--muted); font-size: 12px; }
+    .count-card__number { display: block; margin-top: 4px; font-size: 28px; font-variant-numeric: tabular-nums; line-height: 1; }
+    .count-card__progress { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    .view-panel { min-width: 0; }
+    .view-panel[hidden] { display: none; }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: 306px minmax(0, 1fr);
+      min-height: 630px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 5px 15px rgba(38, 42, 38, .06);
+    }
+
+    .candidate-queue { border-right: 1px solid var(--line); }
+    .region-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin: 0;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .region-heading small { color: var(--muted); font-size: 12px; font-weight: 400; }
+    .queue-list { min-height: 540px; max-height: 740px; padding: 10px; overflow-y: auto; }
+    .shell-note { margin: 0; padding: 12px; color: var(--muted); font-size: 13px; }
+    .queue-item {
+      display: grid;
+      width: 100%;
+      gap: 5px;
+      margin: 0 0 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      text-align: left;
+    }
+    .queue-item:hover, .queue-item[aria-current="true"] { border-color: var(--ink); background: #f3eee3; }
+    .queue-item[aria-current="true"] { box-shadow: inset 4px 0 0 var(--pine); }
+    .queue-item__top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+    .queue-item__title { font-weight: 650; overflow-wrap: anywhere; }
+    .queue-item__meta, .queue-item__conflict, .queue-item__decision { color: var(--muted); font-size: 12px; }
+    .queue-item__conflict--present { color: var(--ochre); font-weight: 650; }
+
+    .evidence-region { min-width: 0; }
+    .evidence-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .image-evidence {
+      min-height: 245px;
+      border: 1px solid var(--line);
+      background: #ece7dc;
+    }
+    /* 图片说明位于略深的证据底色上，使用更深的中性色以满足小字号文本对比度。 */
+    .image-evidence figcaption { padding: 8px 10px; color: #62665f; font-size: 12px; border-top: 1px solid var(--line); }
+    .image-slot {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 4 / 3;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .image-slot img { width: 100%; height: 100%; max-height: 440px; object-fit: contain; }
+    .image-fallback { margin: 0; padding: 18px; color: var(--brick); font-weight: 650; text-align: center; }
+    .evidence-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 16px 16px; }
+    .detail-panel { min-height: 140px; border: 1px solid var(--line); }
+    .detail-panel h3 { margin: 0; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .detail-panel p { margin: 0; padding: 12px; color: var(--muted); font-size: 13px; }
+    .detail-list { display: grid; grid-template-columns: minmax(90px, .45fr) minmax(0, 1fr); margin: 0; padding: 10px 12px; }
+    .detail-list dt, .detail-list dd { margin: 0; padding: 5px 0; border-bottom: 1px solid #ebe6db; }
+    .detail-list dt { color: var(--muted); }
+    .detail-list dd { overflow-wrap: anywhere; }
+    .value-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .value-disclaimer { display: inline-block; padding: 1px 5px; border: 1px solid var(--ochre); color: var(--ochre); font-size: 11px; }
+    .evidence-block { padding: 10px 12px; border-top: 1px solid var(--line); }
+    .evidence-block h4 { margin: 0 0 6px; font-size: 12px; }
+    .evidence-block p { padding: 0; }
+    .evidence-list { margin: 0; padding-left: 20px; color: var(--muted); }
+    .evidence-list li + li { margin-top: 4px; }
+    .action-content { display: grid; gap: 10px; padding: 12px; }
+    .action-content p { padding: 0; }
+    .action-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .action-buttons button { min-height: 34px; padding: 6px 10px; border: 1px solid var(--ink); background: transparent; }
+    .action-buttons button:hover { background: var(--ink); color: var(--panel); }
+    .collection-action { display: grid; gap: 4px; }
+    .collection-note { font-size: 12px !important; }
+    .notice-ochre { padding: 8px 10px !important; border-left: 4px solid var(--ochre); background: #f5ead7; color: #70470f !important; }
+    .notice-brick { padding: 8px 10px !important; border-left: 4px solid var(--brick); background: #f4e4df; color: var(--brick) !important; }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .filter-field { display: grid; gap: 4px; color: var(--muted); font-size: 12px; }
+    .filter-field input, .filter-field select { min-width: 130px; height: 34px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 0; background: var(--panel); color: var(--ink); }
+    .table-toolbar button { height: 34px; padding: 5px 10px; border: 1px solid var(--ink); background: transparent; }
+    .batch-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 52px;
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      border: 1px solid var(--ink);
+      background: #fffdf8;
+      box-shadow: 0 4px 10px rgba(38, 42, 38, .08);
+    }
+    .batch-action-bar button { min-height: 32px; padding: 5px 9px; border: 1px solid var(--ink); background: transparent; }
+    .batch-action-bar button[data-batch-decision="collect"] { border-color: var(--pine); color: var(--pine); }
+    .batch-action-bar button[data-batch-decision="exclude"] { border-color: var(--brick); color: var(--brick); }
+    .batch-action-bar__spacer { flex: 1 1 24px; }
+    .batch-help { margin: 0 0 12px; color: var(--muted); font-size: 12px; }
+    .selection-cell { width: 42px; padding-right: 4px; text-align: center; }
+    tbody tr[data-selected="true"] { background: #eee8dc; box-shadow: inset 3px 0 0 var(--pine); }
+    .undo-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      border-left: 4px solid var(--pine);
+      background: #e7eee9;
+      color: #214937;
+    }
+    .undo-banner[hidden] { display: none; }
+    .undo-banner button { padding: 4px 8px; border: 1px solid currentColor; background: transparent; color: inherit; }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--panel); }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; text-align: left; }
+    caption { padding: 12px 14px; text-align: left; color: var(--muted); }
+    th, td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; font-weight: 600; white-space: nowrap; }
+    th[tabindex="0"] { cursor: pointer; }
+    tbody tr[data-record-id] { cursor: pointer; }
+    tbody tr[data-record-id]:hover { background: #f3eee3; }
+    /* 完整记录行可通过键盘打开，焦点必须与鼠标悬停状态有清晰区分。 */
+    tbody tr[data-record-id]:focus-visible { background: #f3eee3; outline: 3px solid var(--ochre); outline-offset: -3px; }
+    .table-empty td { color: var(--muted); }
+
+    dialog {
+      width: min(520px, calc(100% - 32px));
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 18px 48px rgba(38, 42, 38, .24);
+    }
+    dialog::backdrop { background: rgba(38, 42, 38, .38); }
+    .dialog-body { padding: 18px; }
+    .dialog-body h2 { margin: 0 0 10px; font-family: Georgia, "Songti SC", serif; font-size: 20px; }
+    .dialog-body p { margin: 8px 0; color: var(--muted); }
+    .dialog-summary { margin: 12px 0; padding: 10px 12px; border: 1px solid var(--line); background: var(--paper); }
+    .dialog-summary strong { color: var(--ink); }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .dialog-actions button { min-height: 34px; padding: 6px 11px; border: 1px solid var(--ink); background: transparent; }
+    .dialog-actions .primary-action { background: var(--ink); color: var(--panel); }
+
+    .status-label {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .status-label--collect { color: var(--pine); }
+    .status-label--review { color: var(--ochre); border-style: double; }
+    .status-label--normal { color: var(--muted); border-radius: 999px; }
+    .status-label--unidentified { color: var(--brick); border-style: dashed; }
+
+    .recovery-message {
+      margin-top: 18px;
+      padding: 26px;
+      border: 2px solid var(--brick);
+      background: var(--panel);
+      color: var(--brick);
+      font-weight: 650;
+    }
+
+    @media (max-width: 979px) {
+      .page-shell { width: min(100% - 24px, 760px); padding-top: 14px; }
+      .topbar { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .status-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workbench { grid-template-columns: 1fr; }
+      .candidate-queue { border-right: 0; border-bottom: 1px solid var(--line); }
+      .queue-list { min-height: 80px; }
+      .evidence-grid, .evidence-details { grid-template-columns: 1fr; }
+      .image-evidence { min-height: 0; }
+    }
+
+    @media (max-width: 500px) {
+      .status-summary { grid-template-columns: 1fr; }
+      .view-switcher { width: 100%; }
+      .view-switcher button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app" class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>HeriBase 硬币审核台</h1>
+        <p id="build-timestamp" class="build-meta">数据构建时间：读取中</p>
+        <p class="refresh-hint">源材料更新后，请重新运行数据构建命令以刷新本页。</p>
+      </div>
+      <nav class="view-switcher" aria-label="审核台视图">
+        <button id="view-workbench" type="button" role="tab" aria-selected="true" aria-controls="workbench-panel" data-view="workbench">审核台</button>
+        <button id="view-records" type="button" role="tab" aria-selected="false" aria-controls="records-panel" data-view="records">全部记录</button>
+      </nav>
+      <section class="handoff-area" aria-label="审核决定备份与交接">
+        <div class="handoff-actions">
+          <button id="export-review-decisions" type="button">导出审核决定 JSON</button>
+          <button id="import-review-decisions" type="button">导入审核决定 JSON</button>
+          <input id="import-review-file" type="file" accept="application/json,.json" hidden>
+        </div>
+        <p id="webmcp-status" class="handoff-status" role="status" data-level="neutral">正在检查 WebMCP 支持状态</p>
+      </section>
+    </header>
+
+    <section class="status-summary" aria-label="系统分类统计">
+      <article class="count-card count-card--collect">
+        <button id="status-filter-collect" class="count-card__filter" type="button" data-status-filter="collect"><span class="count-card__label">推荐收藏</span><strong id="count-collect" class="count-card__number">—</strong><span id="progress-collect" class="count-card__progress">已决定 — / —</span></button>
+        <button class="count-card__batch" type="button" data-batch-status="collect">批量处理</button>
+      </article>
+      <article class="count-card count-card--review">
+        <button id="status-filter-review" class="count-card__filter" type="button" data-status-filter="review"><span class="count-card__label">需复核</span><strong id="count-review" class="count-card__number">—</strong><span id="progress-review" class="count-card__progress">已决定 — / —</span></button>
+        <button class="count-card__batch" type="button" data-batch-status="review">批量处理</button>
+      </article>
+      <article class="count-card count-card--normal">
+        <button id="status-filter-normal" class="count-card__filter" type="button" data-status-filter="normal"><span class="count-card__label">普通记录</span><strong id="count-normal" class="count-card__number">—</strong><span id="progress-normal" class="count-card__progress">已决定 — / —</span></button>
+        <button class="count-card__batch" type="button" data-batch-status="normal">批量处理</button>
+      </article>
+      <article class="count-card count-card--unidentified">
+        <button id="status-filter-unidentified" class="count-card__filter" type="button" data-status-filter="unidentified"><span class="count-card__label">未识别</span><strong id="count-unidentified" class="count-card__number">—</strong><span id="progress-unidentified" class="count-card__progress">已决定 — / —</span></button>
+        <button class="count-card__batch" type="button" data-batch-status="unidentified">批量处理</button>
+      </article>
+    </section>
+
+    <section id="workbench-panel" class="view-panel" role="tabpanel" aria-labelledby="view-workbench" data-view-panel="workbench">
+      <div id="review-workbench" class="workbench" data-render-target="workbench">
+        <aside class="candidate-queue" aria-labelledby="queue-heading">
+          <h2 id="queue-heading" class="region-heading">候选队列 <small id="queue-summary">等待记录加载</small></h2>
+          <div id="candidate-queue-list" class="queue-list" data-render-target="candidate-queue" aria-live="polite">
+            <p class="shell-note">候选项目将在此显示。</p>
+          </div>
+        </aside>
+
+        <section id="evidence-region" class="evidence-region" data-render-target="evidence" aria-labelledby="evidence-heading">
+          <h2 id="evidence-heading" class="region-heading">证据对照 <small id="selected-record-title">尚未选择记录</small></h2>
+          <div class="evidence-grid">
+            <figure class="image-evidence">
+              <div id="image-front-slot" class="image-slot" data-image-side="front">正面图片区域</div>
+              <figcaption>正面证据</figcaption>
+            </figure>
+            <figure class="image-evidence">
+              <div id="image-back-slot" class="image-slot" data-image-side="back">反面图片区域</div>
+              <figcaption>反面证据</figcaption>
+            </figure>
+          </div>
+          <div class="evidence-details">
+            <section id="table-fields" class="detail-panel" data-render-target="table-fields"><h3>表格记录</h3><p>等待选择记录。</p></section>
+            <section id="identification-fields" class="detail-panel" data-render-target="identification-fields"><h3>识别结果</h3><p>等待选择记录。</p></section>
+            <section id="conflict-reasons" class="detail-panel" data-render-target="conflicts"><h3>冲突与依据</h3><p>等待选择记录。</p></section>
+            <section id="review-actions" class="detail-panel" data-render-target="review-actions"><h3>我的决定</h3><p>审核操作将在此提供。</p></section>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="records-panel" class="view-panel" role="tabpanel" aria-labelledby="view-records" data-view-panel="records" hidden>
+      <form id="record-filters" class="table-toolbar" data-render-target="record-filters">
+        <label class="filter-field">系统状态
+          <select id="filter-status" name="status"><option value="">全部状态</option><option value="collect">推荐收藏</option><option value="review">需复核</option><option value="normal">普通记录</option><option value="unidentified">未识别</option></select>
+        </label>
+        <label class="filter-field">来源
+          <select id="filter-source" name="source"><option value="">全部来源</option><option value="table">表格</option><option value="local">本地图片</option></select>
+        </label>
+        <label class="filter-field">冲突
+          <select id="filter-conflicts" name="conflicts"><option value="">全部记录</option><option value="only">仅有冲突</option><option value="year">仅年份冲突</option></select>
+        </label>
+        <label class="filter-field">审核决定
+          <select id="filter-decision" name="decision"><option value="">全部决定</option><option value="unset">仅未决定</option><option value="decided">仅已决定</option><option value="collect">本地待收藏</option><option value="need-photo">需补图</option><option value="exclude">排除</option></select>
+        </label>
+        <label class="filter-field">关键词
+          <input id="filter-keyword" name="keyword" type="search" placeholder="名称、年份或来源行">
+        </label>
+        <button id="clear-filters" type="button">清除筛选</button>
+      </form>
+      <div id="undo-banner" class="undo-banner" role="status" hidden><span id="undo-message"></span><button id="undo-last-action" type="button">撤销</button></div>
+      <section id="batch-action-bar" class="batch-action-bar" aria-label="批量审核操作">
+        <strong id="batch-selection-summary">未选择记录</strong>
+        <button id="select-visible-records" type="button">选择当前筛选 0 条</button>
+        <button id="clear-record-selection" type="button">清除选择</button>
+        <span class="batch-action-bar__spacer"></span>
+        <button type="button" data-batch-decision="collect">本地待收藏</button>
+        <button type="button" data-batch-decision="need-photo">标记需补图</button>
+        <button type="button" data-batch-decision="exclude">排除</button>
+        <button type="button" data-batch-decision="">清除决定</button>
+      </section>
+      <p class="batch-help">批量操作只更新此浏览器中的本地审核决定，不会写入 HeriBase 线上藏品库。</p>
+      <div class="table-scroll">
+        <table id="records-table" data-render-target="records-table">
+          <caption>完整记录。可使用列标题排序，并在后续审核时回到对应证据。</caption>
+          <thead><tr>
+            <th class="selection-cell" scope="col"><input id="table-select-all" type="checkbox" aria-label="选择当前筛选的全部记录"></th>
+            <th id="sort-status" scope="col" tabindex="0" data-sort-key="status">状态</th>
+            <th scope="col">我的决定</th>
+            <th scope="col">来源</th>
+            <th scope="col">名称</th>
+            <th id="sort-year" scope="col" tabindex="0" data-sort-key="year">年份</th>
+            <th id="sort-value" scope="col" tabindex="0" data-sort-key="value">服务价值</th>
+            <th scope="col">冲突</th>
+            <th id="sort-source-rows" scope="col" tabindex="0" data-sort-key="sourceRows">来源行</th>
+          </tr></thead>
+          <tbody id="records-table-body" data-render-target="records-table-body">
+            <tr class="table-empty"><td colspan="9">完整记录将在此显示。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="action-dialog" aria-labelledby="action-dialog-title">
+    <div class="dialog-body">
+      <h2 id="action-dialog-title">确认批量操作</h2>
+      <div id="action-dialog-content"></div>
+      <div class="dialog-actions">
+        <button id="action-dialog-cancel" type="button">取消</button>
+        <button id="action-dialog-confirm" class="primary-action" type="button">确认应用</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="./review-handoff.js"></script>
+  <script src="./review-data.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const app = document.getElementById("app");
+      const statuses = ["collect", "review", "normal", "unidentified"];
+      const statusLabels = { collect: "推荐收藏", review: "需复核", normal: "普通记录", unidentified: "未识别" };
+      const sourceLabels = { table: "表格", local: "本地图片" };
+      const decisionLabels = { collect: "本地待收藏", "need-photo": "需补图", exclude: "排除" };
+      const allowedDecisions = new Set(Object.keys(decisionLabels));
+
+      const createElement = (tagName, className, text) => {
+        const element = document.createElement(tagName);
+        if (className) element.className = className;
+        if (text !== undefined) element.textContent = text;
+        return element;
+      };
+      const safeText = (value) => {
+        if (value === undefined || value === null) return "";
+        const text = String(value).trim();
+        return /^(?:undefined|null)$/i.test(text) ? "" : text;
+      };
+      const displayText = (value) => safeText(value) || "—";
+      const presentText = (value) => {
+        const text = safeText(value);
+        return text && !/^[—–-]$/.test(text) ? text : "";
+      };
+
+      const showRecovery = () => {
+        if (!app) return;
+        const message = createElement("p", "recovery-message", "请先运行数据构建命令");
+        message.id = "data-recovery-message";
+        message.setAttribute("role", "alert");
+        app.replaceChildren(message);
+      };
+
+      try {
+        const data = window.COIN_REVIEW_DATA;
+        const recordsAreValid = Array.isArray(data?.records) && data.records.every((record) => (
+          record && typeof record === "object" && typeof record.id === "string" &&
+          typeof record.systemStatus === "string" && statuses.includes(record.systemStatus)
+        ));
+        const countsAreValid = data?.statusCounts && typeof data.statusCounts === "object" && statuses.every((status) => (
+          Number.isInteger(data.statusCounts[status]) && data.statusCounts[status] >= 0
+        ));
+        const metaIsValid = data?.buildMeta && typeof data.buildMeta === "object" &&
+          typeof data.buildMeta.generatedAt === "string" &&
+          typeof data.buildMeta.datasetFingerprint === "string" && data.buildMeta.datasetFingerprint.length > 0 &&
+          Number.isInteger(data.buildMeta.totalRecordCount) &&
+          data.buildMeta.totalRecordCount === data.records?.length;
+
+        if (!data || typeof data !== "object" || !recordsAreValid || !countsAreValid || !metaIsValid) {
+          throw new Error("审核台数据包不完整");
+        }
+        // 每个任务/数据集使用独立缓存；正式决定仍需通过 WebMCP 或 JSON 导入任务包。
+        const storageScope = data.buildMeta.taskKey || data.buildMeta.datasetFingerprint;
+        const STORAGE_KEY = `heribase-review:${storageScope}:decisions:v1`;
+
+        const derivedCounts = data.records.reduce((summary, record) => {
+          summary[record.systemStatus] += 1;
+          return summary;
+        }, { collect: 0, review: 0, normal: 0, unidentified: 0 });
+        if (statuses.some((status) => derivedCounts[status] !== data.statusCounts[status])) {
+          throw new Error("审核台数据计数不一致");
+        }
+
+        statuses.forEach((status) => {
+          const target = document.getElementById(`count-${status}`);
+          if (!target) throw new Error("审核台计数容器缺失");
+          target.textContent = String(data.statusCounts[status]);
+        });
+
+        const timestamp = new Date(data.buildMeta.generatedAt);
+        if (Number.isNaN(timestamp.getTime())) throw new Error("审核台构建时间无效");
+        const buildTimestamp = document.getElementById("build-timestamp");
+        const queueSummary = document.getElementById("queue-summary");
+        if (!buildTimestamp || !queueSummary) throw new Error("审核台元数据容器缺失");
+        buildTimestamp.textContent = `数据构建时间：${timestamp.toLocaleString("zh-CN", { hour12: false })}`;
+
+        const state = {
+          view: "workbench",
+          selectedId: null,
+          filters: { status: "", source: "", conflictsOnly: false, yearConflictsOnly: false, decision: "", query: "" },
+          sortKey: "sourceRows",
+          sortDirection: "asc",
+          decisions: {},
+          batchSelection: new Set(),
+          undoStack: [],
+          pendingAction: null,
+          storageAvailable: true,
+        };
+        const recordIds = new Set(data.records.map((record) => record.id));
+
+        // 只恢复符合 v1 契约的决定；源记录、筛选和当前选择从不写入 localStorage。
+        try {
+          const stored = window.localStorage.getItem(STORAGE_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+              for (const [recordId, value] of Object.entries(parsed)) {
+                if (!recordIds.has(recordId) || !value || typeof value !== "object") continue;
+                // 兼容早期页面曾保存的 needsImage；内存与后续导出统一改用契约中的 need-photo。
+                const decision = value.decision === "needsImage" ? "need-photo" : value.decision;
+                if (!allowedDecisions.has(decision) || typeof value.updatedAt !== "string") continue;
+                state.decisions[recordId] = {
+                  decision,
+                  updatedAt: value.updatedAt,
+                  ...(["single", "bulk", "import"].includes(value.source) ? { source: value.source } : {}),
+                  ...(typeof value.batchActionId === "string" && value.batchActionId ? { batchActionId: value.batchActionId } : {}),
+                };
+              }
+            }
+          }
+        } catch (error) {
+          state.storageAvailable = false;
+        }
+
+        const elementById = (id) => {
+          const element = document.getElementById(id);
+          if (!element) throw new Error(`审核台容器缺失：${id}`);
+          return element;
+        };
+        const queueList = elementById("candidate-queue-list");
+        const selectedRecordTitle = elementById("selected-record-title");
+        const frontSlot = elementById("image-front-slot");
+        const backSlot = elementById("image-back-slot");
+        const tableFields = elementById("table-fields");
+        const identificationFields = elementById("identification-fields");
+        const conflictReasons = elementById("conflict-reasons");
+        const reviewActions = elementById("review-actions");
+        const tableBody = elementById("records-table-body");
+        const tableCaption = elementById("records-table").querySelector("caption");
+        const exportReviewDecisions = elementById("export-review-decisions");
+        const importReviewDecisions = elementById("import-review-decisions");
+        const importReviewFile = elementById("import-review-file");
+        const webMcpStatus = elementById("webmcp-status");
+        const batchSelectionSummary = elementById("batch-selection-summary");
+        const selectVisibleRecords = elementById("select-visible-records");
+        const clearRecordSelection = elementById("clear-record-selection");
+        const tableSelectAll = elementById("table-select-all");
+        const undoBanner = elementById("undo-banner");
+        const undoMessage = elementById("undo-message");
+        const undoLastAction = elementById("undo-last-action");
+        const actionDialog = elementById("action-dialog");
+        const actionDialogTitle = elementById("action-dialog-title");
+        const actionDialogContent = elementById("action-dialog-content");
+        const actionDialogConfirm = elementById("action-dialog-confirm");
+        const actionDialogCancel = elementById("action-dialog-cancel");
+
+        const handoffApi = window.CoinReviewHandoff;
+        const setHandoffStatus = (message, level = "neutral") => {
+          webMcpStatus.textContent = message;
+          webMcpStatus.dataset.level = level;
+        };
+        const packageForHandoff = () => handoffApi.buildPackage(
+          data.records,
+          state.decisions,
+          new Date().toISOString(),
+          { datasetFingerprint: data.buildMeta.datasetFingerprint },
+        );
+
+        const exportReviewPackage = () => {
+          try {
+            if (!handoffApi || typeof handoffApi.buildPackage !== "function") {
+              throw new Error("审核交接工具不可用");
+            }
+            if (typeof Blob !== "function" || !window.URL?.createObjectURL) {
+              throw new Error("当前浏览器不支持文件导出");
+            }
+            const reviewPackage = packageForHandoff();
+            const blob = new Blob([JSON.stringify(reviewPackage, null, 2)], { type: "application/json" });
+            const objectUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = handoffApi.toFileName(reviewPackage.exportedAt);
+            link.hidden = true;
+            document.body.append(link);
+            link.click();
+            link.remove();
+            window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
+            setHandoffStatus("已导出审核决定 JSON", "ready");
+          } catch (error) {
+            setHandoffStatus("无法导出 JSON，请稍后重试", "error");
+          }
+        };
+
+        /**
+         * 所有会覆盖多条决定的操作都先进入同一个确认对话框。对话框内容只由
+         * textContent 构建，导入文件中的字符串不会以 HTML 执行。
+         */
+        const openActionDialog = ({ title, paragraphs, confirmLabel, onConfirm }) => {
+          actionDialogTitle.textContent = title;
+          actionDialogContent.replaceChildren();
+          const summary = createElement("div", "dialog-summary");
+          paragraphs.forEach((paragraph) => summary.append(createElement("p", "", paragraph)));
+          actionDialogContent.append(summary);
+          actionDialogConfirm.textContent = confirmLabel;
+          state.pendingAction = onConfirm;
+          actionDialog.showModal();
+        };
+
+        const closeActionDialog = () => {
+          state.pendingAction = null;
+          actionDialog.close();
+        };
+
+        const showUndo = (message) => {
+          undoMessage.textContent = message;
+          undoBanner.hidden = false;
+        };
+
+        const importReviewPackage = async (file) => {
+          try {
+            const payload = JSON.parse(await file.text());
+            const imported = handoffApi.parseImportedPackage(
+              payload,
+              data.records,
+              data.buildMeta.datasetFingerprint,
+            );
+            if (!imported.ok) {
+              if (imported.reason === "dataset-mismatch") {
+                setHandoffStatus("导入失败：审核包属于另一批数据", "error");
+              } else {
+                setHandoffStatus("导入失败：JSON 不是有效的审核决定包", "error");
+              }
+              return;
+            }
+            const warningText = imported.warnings.length > 0 ? `提示：${imported.warnings.join("；")}` : "数据集校验通过。";
+            openActionDialog({
+              title: "导入审核决定",
+              paragraphs: [
+                `将恢复 ${imported.acceptedCount} 条决定，并替换当前 ${Object.keys(state.decisions).length} 条本地决定。`,
+                warningText,
+              ],
+              confirmLabel: "确认导入",
+              onConfirm: () => {
+                state.undoStack.push({ kind: "replace", previous: { ...state.decisions } });
+                state.decisions = imported.decisions;
+                persistDecisions();
+                renderAll();
+                showUndo(`已导入 ${imported.acceptedCount} 条审核决定`);
+                setHandoffStatus(`已导入 ${imported.acceptedCount} 条审核决定`, "ready");
+              },
+            });
+          } catch (error) {
+            setHandoffStatus("导入失败：无法读取 JSON 文件", "error");
+          }
+        };
+
+        const initializeWebMcp = async () => {
+          if (!handoffApi || typeof handoffApi.registerReadOnlyTools !== "function") {
+            exportReviewDecisions.disabled = true;
+            setHandoffStatus("审核交接工具未加载，无法导出 JSON", "error");
+            return;
+          }
+          // WebMCP 要求 origin isolation；此属性会在本地服务的 OAC: ?1 生效时为 true。
+          if (window.originAgentCluster !== true) {
+            setHandoffStatus("当前页面未满足 origin isolation；可导出 JSON", "warning");
+            return;
+          }
+          const result = await handoffApi.registerReadOnlyTools(document.modelContext, packageForHandoff);
+          if (result.registered) {
+            setHandoffStatus("WebMCP 已就绪：可读取审核决定", "ready");
+          } else if (result.reason === "unsupported") {
+            setHandoffStatus("当前浏览器不支持 WebMCP；可导出 JSON", "warning");
+          } else {
+            setHandoffStatus("WebMCP 未能启用；可导出 JSON", "warning");
+          }
+        };
+        exportReviewDecisions.addEventListener("click", exportReviewPackage);
+
+        const decisionText = (recordId) => {
+          const stored = state.decisions[recordId];
+          return stored ? decisionLabels[stored.decision] : "未设置";
+        };
+        const renderStatusProgress = () => {
+          statuses.forEach((status) => {
+            const recordsInStatus = data.records.filter((record) => record.systemStatus === status);
+            const decidedCount = recordsInStatus.filter((record) => Boolean(state.decisions[record.id])).length;
+            elementById(`progress-${status}`).textContent = `已决定 ${decidedCount} / ${recordsInStatus.length}`;
+          });
+        };
+        // 完整表与排序均以表格年份为主；本地候选没有表格年份时再采用识别年份。
+        const recordYear = (record) => presentText(record.table?.year) || presentText(record.identification?.year) || "—";
+        const queueValue = (record) => {
+          const service = presentText(record.identification?.value);
+          const tableValue = presentText(record.table?.value);
+          if (service) return `${service}（识别服务）`;
+          if (tableValue) return `${tableValue}（表格）`;
+          return "—";
+        };
+        const sourceReference = (record) => {
+          if (Array.isArray(record.sourceRows) && record.sourceRows.length > 0) {
+            return record.sourceRows.map((row) => `CSV #${displayText(row)}`).join("、");
+          }
+          return `本地候选 ${displayText(record.id)}`;
+        };
+        const serviceStatusText = (record) => record.identification?.status === "success" ? "识别成功" : "识别失败";
+
+        const filterRecords = (records) => {
+          const query = safeText(state.filters.query).toLowerCase();
+          return records.filter((record) => {
+            if (state.filters.status && record.systemStatus !== state.filters.status) return false;
+            if (state.filters.source && record.source !== state.filters.source) return false;
+            if (state.filters.conflictsOnly && !(Array.isArray(record.conflictReasons) && record.conflictReasons.length > 0)) return false;
+            if (state.filters.yearConflictsOnly && !record.conflictReasons?.includes("年份与表格不一致")) return false;
+            const storedDecision = state.decisions[record.id]?.decision;
+            if (state.filters.decision === "unset" && storedDecision) return false;
+            if (state.filters.decision === "decided" && !storedDecision) return false;
+            if (allowedDecisions.has(state.filters.decision) && storedDecision !== state.filters.decision) return false;
+            if (!query) return true;
+            const searchable = [
+              record.id,
+              record.displayName,
+              record.table?.name,
+              record.table?.year,
+              record.identification?.name,
+              record.identification?.year,
+              ...(Array.isArray(record.sourceRows) ? record.sourceRows : []),
+            ].map(safeText).join(" ").toLowerCase();
+            return searchable.includes(query);
+          });
+        };
+        const numberValue = (value) => {
+          const parsed = Number.parseFloat(safeText(value).replace(/[^0-9.-]/g, ""));
+          return Number.isFinite(parsed) ? parsed : 0;
+        };
+        const numericYear = (record) => {
+          const direct = presentText(record.table?.year) || presentText(record.identification?.year);
+          const fallback = safeText(record.displayName).match(/\b(1[5-9]\d{2}|20\d{2})\b/)?.[1];
+          return Number(direct || fallback) || Number.MAX_SAFE_INTEGER;
+        };
+        const firstSourceRow = (record) => Array.isArray(record.sourceRows) && record.sourceRows.length > 0
+          ? Math.min(...record.sourceRows.map(Number).filter(Number.isFinite))
+          : Number.MAX_SAFE_INTEGER;
+        const sortRecords = (records) => {
+          const statusOrder = { collect: 0, review: 1, normal: 2, unidentified: 3 };
+          const sorted = [...records];
+          const compareId = (left, right) => safeText(left.id).localeCompare(safeText(right.id));
+          if (state.sortKey === "status") {
+            sorted.sort((left, right) => (statusOrder[left.systemStatus] ?? 99) - (statusOrder[right.systemStatus] ?? 99) || compareId(left, right));
+          } else if (state.sortKey === "year") {
+            sorted.sort((left, right) => numericYear(left) - numericYear(right) || compareId(left, right));
+          } else if (state.sortKey === "value") {
+            // 统一先按升序建立稳定序列，再由 sortDirection 决定是否反转；估值列首次点击默认降序。
+            sorted.sort((left, right) => numberValue(left.identification?.value || left.table?.value) - numberValue(right.identification?.value || right.table?.value) || compareId(left, right));
+          } else if (state.sortKey === "sourceRows") {
+            sorted.sort((left, right) => firstSourceRow(left) - firstSourceRow(right) || compareId(left, right));
+          }
+          return state.sortDirection === "desc" ? sorted.reverse() : sorted;
+        };
+        const visibleRecords = () => sortRecords(filterRecords(data.records));
+
+        const makeStatusLabel = (status) => {
+          const label = createElement("span", `status-label status-label--${status}`, statusLabels[status] || "未知状态");
+          return label;
+        };
+
+        const renderQueue = (records) => {
+          queueList.replaceChildren();
+          queueSummary.textContent = `显示 ${records.length} / ${data.records.length} 条`;
+          if (records.length === 0) {
+            queueList.append(createElement("p", "shell-note", "没有符合当前筛选条件的记录。"));
+            return;
+          }
+          for (const record of records) {
+            const item = createElement("button", "queue-item");
+            item.type = "button";
+            item.dataset.recordId = record.id;
+            item.setAttribute("aria-current", String(record.id === state.selectedId));
+            // 队列按钮的可见内容已能形成 accessible name；显式标签让键盘跳转后
+            // 屏幕阅读器能立即播报“审核哪条记录”。
+            item.setAttribute("aria-label", `审核 ${displayText(record.displayName)}，${sourceReference(record)}`);
+
+            const top = createElement("span", "queue-item__top");
+            top.append(createElement("span", "queue-item__title", displayText(record.displayName)), makeStatusLabel(record.systemStatus));
+            item.append(
+              top,
+              createElement("span", "queue-item__meta", `年份：${recordYear(record)} · 估值：${queueValue(record)}`),
+              createElement("span", "queue-item__meta", sourceReference(record)),
+            );
+            const conflictCount = Array.isArray(record.conflictReasons) ? record.conflictReasons.length : 0;
+            item.append(createElement(
+              "span",
+              `queue-item__conflict${conflictCount ? " queue-item__conflict--present" : ""}`,
+              conflictCount ? `有 ${conflictCount} 项冲突` : "无字段冲突",
+            ));
+            item.append(createElement("span", "queue-item__decision", `我的决定：${decisionText(record.id)}`));
+            item.addEventListener("click", () => {
+              state.selectedId = record.id;
+              renderQueue(visibleRecords());
+              renderEvidence(record);
+            });
+            queueList.append(item);
+          }
+        };
+
+        const renderImage = (slot, record, side) => {
+          slot.replaceChildren();
+          const url = presentText(side === "front" ? record.imageFront : record.imageBack);
+          const showImageFallback = () => {
+            const fallback = createElement("p", "image-fallback", "图片不可加载／需补图");
+            fallback.setAttribute("role", "status");
+            slot.replaceChildren(fallback);
+          };
+          if (!url) {
+            showImageFallback();
+            return;
+          }
+          const image = document.createElement("img");
+          image.alt = `${displayText(record.displayName)}${side === "front" ? "正面" : "反面"}图片`;
+          image.loading = "eager";
+          image.addEventListener("error", showImageFallback, { once: true });
+          slot.append(image);
+          image.src = url;
+        };
+
+        const renderFieldPanel = (panel, title, fields, valueLabelIndex = -1) => {
+          panel.replaceChildren(createElement("h3", "", title));
+          const list = createElement("dl", "detail-list");
+          fields.forEach(([label, value], index) => {
+            list.append(createElement("dt", "", label));
+            const description = createElement("dd");
+            if (index === valueLabelIndex) {
+              const row = createElement("span", "value-row");
+              row.append(
+                createElement("span", "", displayText(value)),
+                createElement("span", "value-disclaimer", "识别服务估值，仅作初筛"),
+              );
+              description.append(row);
+            } else {
+              description.textContent = displayText(value);
+            }
+            list.append(description);
+          });
+          panel.append(list);
+        };
+
+        const appendEvidenceList = (panel, title, items, emptyText) => {
+          const block = createElement("section", "evidence-block");
+          block.append(createElement("h4", "", title));
+          if (items.length === 0) {
+            block.append(createElement("p", "", emptyText));
+          } else {
+            const list = createElement("ul", "evidence-list");
+            items.forEach((item) => list.append(createElement("li", "", displayText(item))));
+            block.append(list);
+          }
+          panel.append(block);
+        };
+
+        const renderConflictPanel = (record) => {
+          conflictReasons.replaceChildren(createElement("h3", "", "冲突与依据"));
+          const metadata = createElement("dl", "detail-list");
+          const entries = [
+            ["系统状态", statusLabels[record.systemStatus] || "未知状态"],
+            ["来源", sourceLabels[record.source] || displayText(record.source)],
+            ["来源行／候选", sourceReference(record)],
+            ["记录 ID", record.identification?.recordId],
+            ["图片配对", record.imagePairComplete ? "正反面齐全" : "图片不完整"],
+            ["识别服务状态", serviceStatusText(record)],
+          ];
+          entries.forEach(([label, value]) => metadata.append(createElement("dt", "", label), createElement("dd", "", displayText(value))));
+          conflictReasons.append(metadata);
+
+          appendEvidenceList(
+            conflictReasons,
+            "证据备注",
+            Array.isArray(record.evidenceNotes) ? record.evidenceNotes : [],
+            "无补充备注",
+          );
+          appendEvidenceList(
+            conflictReasons,
+            "冲突理由",
+            Array.isArray(record.conflictReasons) ? record.conflictReasons : [],
+            "未发现字段冲突",
+          );
+
+          if (record.identification?.status !== "success") {
+            const failure = createElement("section", "evidence-block");
+            failure.append(
+              createElement("h4", "", "识别失败处置"),
+              createElement("p", "", `失败原因：${displayText(record.identification?.failureReason)}`),
+              createElement(
+                "p",
+                "",
+                record.imagePairComplete
+                  ? "下一步：建议补充清晰、无反光的正反面照片后重新识别。"
+                  : "下一步：建议先补齐正反面图片，再重新识别。",
+              ),
+            );
+            conflictReasons.append(failure);
+          }
+        };
+
+        const persistDecisions = () => {
+          if (!state.storageAvailable) return;
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state.decisions));
+          } catch (error) {
+            state.storageAvailable = false;
+          }
+        };
+
+        const setDecision = (record, decision) => {
+          if (decision) {
+            state.decisions[record.id] = { decision, updatedAt: new Date().toISOString(), source: "single" };
+          } else {
+            delete state.decisions[record.id];
+          }
+          persistDecisions();
+          renderAll();
+        };
+
+        const renderActions = (record) => {
+          reviewActions.replaceChildren(createElement("h3", "", "我的决定"));
+          const content = createElement("div", "action-content");
+          const stored = state.decisions[record.id];
+          content.append(createElement("p", "", `当前决定：${decisionText(record.id)}`));
+          if (stored) content.append(createElement("p", "", `更新时间：${displayText(stored.updatedAt)}`));
+
+          const buttons = createElement("div", "action-buttons");
+          const collectionAction = createElement("div", "collection-action");
+          const collectButton = createElement("button", "", "加入本地待收藏");
+          collectButton.type = "button";
+          collectButton.setAttribute("aria-pressed", String(stored?.decision === "collect"));
+          collectButton.addEventListener("click", () => {
+            const needsConfirmation = ["review", "unidentified"].includes(record.systemStatus);
+            if (needsConfirmation) {
+              // 原生 confirm 是真实的二次显式选择；取消分支在调用持久化函数前终止，
+              // 因此不会改动内存决定或 localStorage。
+              const confirmed = window.confirm("该记录仍需复核或补充识别证据。确认仍将它加入本地待收藏吗？");
+              if (!confirmed) return;
+            }
+            setDecision(record, "collect");
+          });
+          collectionAction.append(
+            collectButton,
+            createElement("p", "collection-note", "仅保存在此浏览器，尚未写入线上藏品库"),
+          );
+          buttons.append(collectionAction);
+
+          [
+            ["标记需补图", "need-photo"],
+            ["排除", "exclude"],
+            ["清除本地决定", ""],
+          ].forEach(([label, decision]) => {
+            const button = createElement("button", "", label);
+            button.type = "button";
+            if (decision) button.setAttribute("aria-pressed", String(stored?.decision === decision));
+            button.addEventListener("click", () => setDecision(record, decision));
+            buttons.append(button);
+          });
+          content.append(buttons);
+
+          if (stored?.decision === "collect" && ["review", "unidentified"].includes(record.systemStatus)) {
+            content.append(createElement("p", "notice-ochre", "该记录仍需复核或补充识别证据，请核实后再收藏。"));
+          }
+          if (!state.storageAvailable) {
+            content.append(createElement("p", "notice-brick", "浏览器存储不可用，当前决定刷新后不会保留。"));
+          }
+          reviewActions.append(content);
+        };
+
+        const renderEmptyEvidence = () => {
+          selectedRecordTitle.textContent = "当前筛选无记录";
+          [frontSlot, backSlot].forEach((slot) => slot.replaceChildren(createElement("p", "shell-note", "请选择记录。")));
+          [
+            [tableFields, "表格记录"],
+            [identificationFields, "识别结果"],
+            [conflictReasons, "冲突与依据"],
+            [reviewActions, "我的决定"],
+          ].forEach(([panel, title]) => panel.replaceChildren(createElement("h3", "", title), createElement("p", "", "没有可显示的记录。")));
+        };
+
+        const renderEvidence = (record) => {
+          if (!record) {
+            renderEmptyEvidence();
+            return;
+          }
+          selectedRecordTitle.textContent = `${sourceReference(record)} · ${displayText(record.displayName)}`;
+          renderImage(frontSlot, record, "front");
+          renderImage(backSlot, record, "back");
+          renderFieldPanel(tableFields, "表格记录", [
+            ["名称", record.table?.name],
+            ["系列", record.table?.series],
+            ["年份", record.table?.year],
+            ["铸币标记", record.table?.mintMark],
+            ["评级", record.table?.grade],
+            ["表格估值", record.table?.value],
+          ]);
+          renderFieldPanel(identificationFields, "识别结果", [
+            ["服务状态", serviceStatusText(record)],
+            ["识别名称", record.identification?.name],
+            ["年份", record.identification?.year],
+            ["铸币标记", record.identification?.mintMark],
+            ["评级", record.identification?.grade],
+            ["服务估值", record.identification?.value],
+            ["identify_uri", record.identification?.identifyUri],
+            ["user_uniq_uri", record.identification?.userUniqUri],
+            ["collection_uri", record.identification?.collectionUri],
+          ], 5);
+          renderConflictPanel(record);
+          renderActions(record);
+        };
+
+        const appendCell = (row, value, className = "") => row.append(createElement("td", className, displayText(value)));
+        const renderBatchSelection = (records) => {
+          const visibleIds = records.map((record) => record.id);
+          const selectedVisibleCount = visibleIds.filter((recordId) => state.batchSelection.has(recordId)).length;
+          const selectedCount = state.batchSelection.size;
+          batchSelectionSummary.textContent = selectedCount > 0 ? `已选择 ${selectedCount} 条` : "未选择记录";
+          selectVisibleRecords.textContent = `选择当前筛选 ${visibleIds.length} 条`;
+          selectVisibleRecords.disabled = visibleIds.length === 0 || selectedVisibleCount === visibleIds.length;
+          clearRecordSelection.disabled = selectedCount === 0;
+          document.querySelectorAll("[data-batch-decision]").forEach((button) => { button.disabled = selectedCount === 0; });
+          tableSelectAll.disabled = visibleIds.length === 0;
+          tableSelectAll.checked = visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
+          tableSelectAll.indeterminate = selectedVisibleCount > 0 && selectedVisibleCount < visibleIds.length;
+        };
+
+        const openBulkPreview = (decision) => {
+          if (state.batchSelection.size === 0) return;
+          const preview = handoffApi.previewBulkDecision(
+            data.records,
+            state.decisions,
+            [...state.batchSelection],
+            decision,
+          );
+          const applicableCount = preview.eligibleIds.length + preview.warningIds.length;
+          const label = decision ? decisionLabels[decision] : "清除决定";
+          if (applicableCount === 0) {
+            setHandoffStatus(`没有可执行“${label}”的所选记录`, "warning");
+            return;
+          }
+          const paragraphs = [
+            `已选择 ${preview.requestedCount} 条，本次将处理 ${applicableCount} 条。`,
+            preview.overwrittenCount > 0 ? `其中 ${preview.overwrittenCount} 条已有不同决定，将被覆盖。` : "不会覆盖已有的不同决定。",
+          ];
+          if (preview.warningIds.length > 0) paragraphs.push(`${preview.warningIds.length} 条“需复核”记录将加入本地待收藏，请确认已接受风险。`);
+          if (preview.blockedIds.length > 0) paragraphs.push(`${preview.blockedIds.length} 条未识别或已失效记录会被跳过。`);
+          paragraphs.push("此次操作仅保存本地审核决定，不会写入 HeriBase。可在操作后撤销。");
+          openActionDialog({
+            title: `确认批量${label}`,
+            paragraphs,
+            confirmLabel: `应用到 ${applicableCount} 条`,
+            onConfirm: () => {
+              const timestamp = new Date().toISOString();
+              const batchActionId = globalThis.crypto?.randomUUID?.() ?? `batch-${Date.now()}`;
+              const result = handoffApi.applyBulkDecision(state.decisions, preview, decision, timestamp, batchActionId);
+              state.decisions = result.decisions;
+              state.undoStack.push({ kind: "batch", undo: result.undo });
+              state.batchSelection.clear();
+              persistDecisions();
+              renderAll();
+              showUndo(`已批量${label} ${result.appliedIds.length} 条记录`);
+            },
+          });
+        };
+
+        const renderTable = () => {
+          const records = visibleRecords();
+          tableBody.replaceChildren();
+          if (tableCaption) tableCaption.textContent = `完整记录：显示 ${records.length} / ${data.records.length} 条。点击记录可回到审核台查看证据。`;
+          if (records.length === 0) {
+            const row = createElement("tr", "table-empty");
+            const cell = createElement("td", "", "没有符合当前筛选条件的记录。");
+            cell.colSpan = 9;
+            row.append(cell);
+            tableBody.append(row);
+          } else {
+            records.forEach((record) => {
+              const row = createElement("tr");
+              row.dataset.recordId = record.id;
+              row.dataset.selected = String(state.batchSelection.has(record.id));
+              row.tabIndex = 0;
+              const selectionCell = createElement("td", "selection-cell");
+              const checkbox = createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.checked = state.batchSelection.has(record.id);
+              checkbox.setAttribute("aria-label", `选择 ${displayText(record.displayName)}`);
+              checkbox.addEventListener("click", (event) => event.stopPropagation());
+              checkbox.addEventListener("change", () => {
+                if (checkbox.checked) state.batchSelection.add(record.id);
+                else state.batchSelection.delete(record.id);
+                renderTable();
+              });
+              selectionCell.append(checkbox);
+              row.append(selectionCell);
+              const statusCell = createElement("td");
+              statusCell.append(makeStatusLabel(record.systemStatus));
+              row.append(statusCell);
+              appendCell(row, decisionText(record.id));
+              appendCell(row, sourceLabels[record.source] || record.source);
+              appendCell(row, record.displayName);
+              appendCell(row, recordYear(record));
+              appendCell(row, record.identification?.value);
+              appendCell(row, Array.isArray(record.conflictReasons) && record.conflictReasons.length > 0 ? record.conflictReasons.join("；") : "无");
+              appendCell(row, sourceReference(record));
+              const openRecord = ({ moveFocus = false } = {}) => {
+                state.selectedId = record.id;
+                setView("workbench");
+                renderQueue(visibleRecords());
+                renderEvidence(record);
+                if (moveFocus) {
+                  // renderQueue 会重建 DOM；必须在重建完成后再定位当前记录，
+                  // 否则焦点会留在已隐藏视图中的旧表格行上。
+                  const selectedQueueItem = [...queueList.querySelectorAll(".queue-item")]
+                    .find((item) => item.dataset.recordId === record.id);
+                  selectedQueueItem?.focus();
+                }
+              };
+              row.addEventListener("click", openRecord);
+              row.addEventListener("keydown", (event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                openRecord({ moveFocus: true });
+              });
+              tableBody.append(row);
+            });
+          }
+
+          renderBatchSelection(records);
+
+          document.querySelectorAll("th[data-sort-key]").forEach((header) => {
+            if (header.dataset.sortKey === state.sortKey) {
+              header.setAttribute("aria-sort", state.sortDirection === "asc" ? "ascending" : "descending");
+            } else {
+              header.removeAttribute("aria-sort");
+            }
+          });
+        };
+
+        const ensureSelection = (records) => {
+          if (records.length === 0) {
+            state.selectedId = null;
+            return null;
+          }
+          const selected = records.find((record) => record.id === state.selectedId);
+          if (selected) return selected;
+          state.selectedId = records[0].id;
+          return records[0];
+        };
+
+        const renderFilterState = () => {
+          elementById("filter-status").value = state.filters.status;
+          elementById("filter-source").value = state.filters.source;
+          elementById("filter-conflicts").value = state.filters.yearConflictsOnly ? "year" : state.filters.conflictsOnly ? "only" : "";
+          elementById("filter-decision").value = state.filters.decision;
+          elementById("filter-keyword").value = state.filters.query;
+          document.querySelectorAll("[data-status-filter]").forEach((button) => {
+            button.setAttribute("aria-pressed", String(button.dataset.statusFilter === state.filters.status));
+          });
+        };
+
+        const renderAll = () => {
+          const records = visibleRecords();
+          const selected = ensureSelection(records);
+          renderFilterState();
+          renderStatusProgress();
+          renderQueue(records);
+          renderEvidence(selected);
+          renderTable();
+        };
+
+        const setView = (view) => {
+          state.view = view;
+          document.querySelectorAll("[data-view]").forEach((button) => {
+            button.setAttribute("aria-selected", String(button.dataset.view === view));
+          });
+          document.querySelectorAll("[data-view-panel]").forEach((panel) => {
+            panel.hidden = panel.dataset.viewPanel !== view;
+          });
+        };
+
+        document.querySelectorAll("[data-view]").forEach((button) => {
+          button.addEventListener("click", () => setView(button.dataset.view));
+        });
+        document.querySelectorAll("[data-status-filter]").forEach((button) => {
+          button.addEventListener("click", () => {
+            state.filters.status = button.dataset.statusFilter;
+            state.batchSelection.clear();
+            renderAll();
+          });
+        });
+        document.querySelectorAll("[data-batch-status]").forEach((button) => {
+          button.addEventListener("click", () => {
+            // 分类卡的“批量处理”必须代表完整分类，不能悄悄继承上一次来源、
+            // 关键词或冲突筛选，否则“全选”会少选但用户不易察觉。
+            state.filters = {
+              status: button.dataset.batchStatus,
+              source: "",
+              conflictsOnly: false,
+              yearConflictsOnly: false,
+              decision: "",
+              query: "",
+            };
+            setView("records");
+            state.batchSelection = new Set(visibleRecords().map((record) => record.id));
+            renderAll();
+            batchSelectionSummary.focus?.();
+          });
+        });
+
+        const filterStatus = elementById("filter-status");
+        const filterSource = elementById("filter-source");
+        const filterConflicts = elementById("filter-conflicts");
+        const filterDecision = elementById("filter-decision");
+        const filterKeyword = elementById("filter-keyword");
+        filterStatus.addEventListener("change", () => { state.filters.status = filterStatus.value; state.batchSelection.clear(); renderAll(); });
+        filterSource.addEventListener("change", () => { state.filters.source = filterSource.value; state.batchSelection.clear(); renderAll(); });
+        filterConflicts.addEventListener("change", () => {
+          state.filters.conflictsOnly = filterConflicts.value === "only";
+          state.filters.yearConflictsOnly = filterConflicts.value === "year";
+          state.batchSelection.clear();
+          renderAll();
+        });
+        filterDecision.addEventListener("change", () => { state.filters.decision = filterDecision.value; state.batchSelection.clear(); renderAll(); });
+        filterKeyword.addEventListener("input", () => { state.filters.query = filterKeyword.value; state.batchSelection.clear(); renderAll(); });
+        elementById("clear-filters").addEventListener("click", () => {
+          state.filters = { status: "", source: "", conflictsOnly: false, yearConflictsOnly: false, decision: "", query: "" };
+          state.batchSelection.clear();
+          renderAll();
+        });
+        elementById("record-filters").addEventListener("submit", (event) => event.preventDefault());
+
+        selectVisibleRecords.addEventListener("click", () => {
+          visibleRecords().forEach((record) => state.batchSelection.add(record.id));
+          renderTable();
+        });
+        clearRecordSelection.addEventListener("click", () => {
+          state.batchSelection.clear();
+          renderTable();
+        });
+        tableSelectAll.addEventListener("change", () => {
+          const records = visibleRecords();
+          if (tableSelectAll.checked) records.forEach((record) => state.batchSelection.add(record.id));
+          else records.forEach((record) => state.batchSelection.delete(record.id));
+          renderTable();
+        });
+        document.querySelectorAll("[data-batch-decision]").forEach((button) => {
+          button.addEventListener("click", () => openBulkPreview(button.dataset.batchDecision));
+        });
+
+        importReviewDecisions.addEventListener("click", () => importReviewFile.click());
+        importReviewFile.addEventListener("change", () => {
+          const [file] = importReviewFile.files ?? [];
+          if (file) void importReviewPackage(file);
+          importReviewFile.value = "";
+        });
+        actionDialogCancel.addEventListener("click", closeActionDialog);
+        actionDialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeActionDialog();
+        });
+        actionDialogConfirm.addEventListener("click", () => {
+          const action = state.pendingAction;
+          closeActionDialog();
+          if (typeof action === "function") action();
+        });
+        undoLastAction.addEventListener("click", () => {
+          const operation = state.undoStack.pop();
+          if (!operation) return;
+          if (operation.kind === "batch") state.decisions = handoffApi.undoDecisionBatch(state.decisions, operation.undo);
+          if (operation.kind === "replace") state.decisions = { ...operation.previous };
+          persistDecisions();
+          renderAll();
+          undoBanner.hidden = true;
+          setHandoffStatus("已撤销上一次批量操作", "ready");
+        });
+
+        document.querySelectorAll("th[data-sort-key]").forEach((header) => {
+          const activateSort = () => {
+            const key = header.dataset.sortKey;
+            if (state.sortKey === key) {
+              state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
+            } else {
+              state.sortKey = key;
+              state.sortDirection = key === "value" ? "desc" : "asc";
+            }
+            renderAll();
+          };
+          header.addEventListener("click", activateSort);
+          header.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            activateSort();
+          });
+        });
+
+        setView("workbench");
+        renderAll();
+        // WebMCP 是渐进增强：注册失败只影响交接状态，不影响本地审核与 JSON 导出。
+        void initializeWebMcp();
+      } catch (error) {
+        // 所有数据包或初始化异常均退回明确恢复态，避免局部渲染后留下空白页面。
+        showRecovery();
+      }
+    })();
+  </script>
+</body>
+</html>

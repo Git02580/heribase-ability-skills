@@ -1,0 +1,49 @@
+{
+  "skill_name": "heribase-collection",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "batch_new 目录里有 80 张硬币正反面照片和一个 coin-list.xlsx，表格里还有嵌入图。帮我整理并识别，后面我会挑一部分收藏。",
+      "expected_output": "创建分钟级 task_key 的自包含任务包，复制所有图片/XLSX/嵌入图，建立稳定 local_id、配对和缺图清单；先展示首次确认范围，未确认前不上传或识别。",
+      "files": [],
+      "expectations": [
+        "Uses heribase-task-package instead of a session-only BatchDraft",
+        "Preserves local copies and spreadsheet provenance before identification",
+        "Stops at the first explicit upload/identification confirmation gate"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "继续昨天的 20260827-2130-world-coins 任务，给我打开电脑上用的审核台。我想按推荐收藏、需复核分组看，也要能全选。",
+      "expected_output": "先校验任务包，再生成 A 双栏审核台、顶部分类计数和全部记录表格；启动 loopback + origin isolation 服务；说明 WebMCP 只读读取和 JSON 导出双轨，批量决定逐项留痕。",
+      "files": [],
+      "expectations": [
+        "Validates the existing task before generating derived UI",
+        "Uses the reusable warm-neutral desktop review-workbench template",
+        "Offers task-scoped WebMCP plus JSON export and never treats localStorage as authoritative"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "审核台里我已经把推荐收藏全选了。读取决定，然后把这些都加进 HeriBase。",
+      "expected_output": "读取 WebMCP 或导出 JSON，验证 schema v2 和数据集指纹，转换为逐项审核事件，生成带 payload SHA-256 的收藏计划并展示范围；再次确认并 preflight 后才逐项调用 CLI。",
+      "files": [],
+      "expectations": [
+        "Imports decisions into append-only task events before acting",
+        "Builds an exact plan bound to dataset revision, item versions, decisions and identifiers",
+        "Does not execute collection writes before payload-bound user confirmation"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "刚才 12 条 collection add 有 3 条超时，直接把这 3 条重试一遍。",
+      "expected_output": "将超时项标为 reconcile_required，保留 raw/attempt；先使用只读查询核验是否已创建 collection_uri，只重试明确未写入且仍在原授权范围的项。",
+      "files": [],
+      "expectations": [
+        "Refuses blind retry after an ambiguous remote result",
+        "Requires read-only reconciliation",
+        "Preserves partial successes and retries only definite failures"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/integrity.schema.json",
+  "title": "HeriBase package integrity v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_key", "revision", "generated_at", "files", "package_sha256"],
+  "properties": {
+    "schema_version": {"const": "heribase.integrity.v1"},
+    "task_key": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 1},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "files": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "role", "byte_size", "sha256", "last_sequence", "last_event_id"], "properties": {"path": {"type": "string"}, "role": {"enum": ["metadata", "schema", "source", "snapshot", "log", "raw", "documentation"]}, "byte_size": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "last_sequence": {"type": ["integer", "null"], "minimum": 1}, "last_event_id": {"type": ["string", "null"]}}}},
+    "package_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

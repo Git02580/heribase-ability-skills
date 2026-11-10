@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase 收藏整理"
+  short_description: "在当前聊天中批量整理钱币照片并自动配对，确认识别和结果后加入收藏"
+  default_prompt: "Use $heribase-collection to organize all coin photos and spreadsheets I provide, automatically match their obverse and reverse with evidence, and guide identification and collection after confirmation."
+
+policy:
+  allow_implicit_invocation: true

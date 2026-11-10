@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>HeriBase · 收藏工作空间</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="add.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳至主要内容</a>
+    <header class="topbar">
+      <a class="brand" href="#add">HeriBase<span>COLLECTION WORKSPACE</span></a>
+      <div class="top-tools compact-top-tools">
+        <button class="global-search" data-action="search"><span>搜索收藏与资料</span><kbd>⌘ K</kbd></button>
+        <a class="button gold small" href="#add">＋ 添加钱币</a>
+      </div>
+    </header>
+    <aside class="sidebar" aria-label="主导航">
+      <div class="workspace-label">
+        <span class="workspace-monogram">H</span>
+        <div>我的收藏空间<small>本地工作空间</small></div>
+      </div>
+      <div class="nav-caption">工作空间</div>
+      <nav id="navigation"></nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-account" role="group" aria-label="当前账号">
+          <div class="sidebar-account-avatar" aria-hidden="true">
+            <svg id="account-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="12" cy="8" r="3.2"></circle>
+              <path d="M5.8 19v-1a4.8 4.8 0 0 1 4.8-4.8h2.8a4.8 4.8 0 0 1 4.8 4.8v1"></path>
+            </svg>
+            <span id="account-avatar-initials" hidden></span>
+            <img id="account-avatar" alt="" referrerpolicy="no-referrer" hidden />
+          </div>
+          <div class="sidebar-account-label">
+            <span id="account-nickname" class="sidebar-account-name">HeriBase 账号</span>
+            <span id="account-provider" class="sidebar-account-provider">正在读取账号…</span>
+          </div>
+        </div>
+        <div class="sidebar-connection">
+          <span class="status-dot"></span> <span id="connection-status">正在连接本机服务…</span>
+          <a href="#reports">资料与操作可随时回看 ↗</a>
+        </div>
+      </div>
+    </aside>
+    <nav id="mobile-navigation" class="mobile-nav" aria-label="移动导航"></nav>
+    <main id="main" tabindex="-1">
+      <div class="empty-state">
+        <h1>正在打开工作空间</h1>
+        <p>恢复本机保存的资料与任务进度。</p>
+      </div>
+    </main>
+    <footer class="workspace-bar">
+      <span>HERIBASE <b>WORKSPACE</b></span
+      ><span id="workspace-status">连接本机服务后继续</span><div class="workspace-actions"><button data-action="api-check">检查 API 网络</button><button data-action="refresh">刷新状态</button></div>
+    </footer>
+    <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+    <dialog id="bridge-dialog" class="bridge-dialog" aria-labelledby="bridge-title"></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

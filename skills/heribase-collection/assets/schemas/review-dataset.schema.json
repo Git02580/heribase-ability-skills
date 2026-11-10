@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/review-dataset.schema.json",
+  "title": "HeriBase review workbench dataset v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["records", "statusCounts", "buildMeta"],
+  "properties": {
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "sourceRows", "displayName", "imageFront", "imageBack", "imagePairComplete", "table", "identification", "reviewFlag", "evidenceNotes", "conflictReasons", "systemStatus"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "source": {"enum": ["table", "local"]},
+          "sourceRows": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+          "displayName": {"type": "string"},
+          "imageFront": {"type": "string"},
+          "imageBack": {"type": "string"},
+          "imagePairComplete": {"type": "boolean"},
+          "table": {"type": "object"},
+          "identification": {"type": "object"},
+          "reviewFlag": {"type": "boolean"},
+          "evidenceNotes": {"type": "array", "items": {"type": "string"}},
+          "conflictReasons": {"type": "array", "items": {"type": "string"}},
+          "systemStatus": {"enum": ["collect", "review", "normal", "unidentified"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collect", "review", "normal", "unidentified"],
+      "properties": {
+        "collect": {"type": "integer", "minimum": 0},
+        "review": {"type": "integer", "minimum": 0},
+        "normal": {"type": "integer", "minimum": 0},
+        "unidentified": {"type": "integer", "minimum": 0}
+      }
+    },
+    "buildMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskKey", "generatedAt", "datasetFingerprint", "datasetRevision", "taskRevision", "totalRecordCount"],
+      "properties": {
+        "taskKey": {"type": "string", "minLength": 1},
+        "generatedAt": {"type": "string", "format": "date-time"},
+        "datasetFingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "datasetRevision": {"type": "integer", "minimum": 1},
+        "taskRevision": {"type": "integer", "minimum": 1},
+        "totalRecordCount": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

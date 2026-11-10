@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heribase.local/schemas/audit-event.schema.json",
+  "title": "HeriBase audit event v1",
+  "type": "object",
+  "required": ["schema_version", "event_id", "task_key", "event_type", "entity", "actor", "correlation_id", "before", "after", "details", "created_at", "sequence", "previous_event_sha256", "event_sha256"],
+  "properties": {
+    "schema_version": {"const": "heribase.audit-event.v1"},
+    "event_id": {"type": "string"},
+    "task_key": {"type": "string"},
+    "event_type": {"type": "string", "minLength": 1},
+    "entity": {"type": "object", "required": ["type", "id"], "properties": {"type": {"type": "string"}, "id": {"type": ["string", "null"]}}, "additionalProperties": true},
+    "actor": {"type": "object", "required": ["type", "name"], "properties": {"type": {"enum": ["user", "agent", "system", "migration"]}, "name": {"type": "string"}}, "additionalProperties": true},
+    "correlation_id": {"type": ["string", "null"]},
+    "before": {},
+    "after": {},
+    "details": {"type": "object"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "previous_event_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "event_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

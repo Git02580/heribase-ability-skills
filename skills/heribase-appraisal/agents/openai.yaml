@@ -1,0 +1,7 @@
+interface:
+  display_name: "HeriBase 真人鉴定"
+  short_description: "鉴定材料、确认提交与报告跟进"
+  default_prompt: "准备这枚钱币的真人鉴定材料，并检查已有次数。"
+
+policy:
+  allow_implicit_invocation: true
