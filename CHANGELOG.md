@@ -1,5 +1,9 @@
 # Changelog
 
+## First coin
+
+- Made single coin identification the first example in the quick start and the lead description for the collection skill.
+
 ## Verification
 
 - Published a five-photo workbench run and a clean-install report with the exact Connector revision and the scope of each check.

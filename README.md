@@ -1,10 +1,10 @@
 # HeriBase Connector
 
-**Turn a folder of coin photos into a collection.**
+**Identify a coin from two photos. Build a collection as you go.**
 
-If you have a camera roll full of unnamed coin photos or a spreadsheet with images, give the whole batch to Codex, Claude Code, or another compatible AI agent. HeriBase Connector helps it pair fronts and backs, flag missing photos, identify the coins you choose, and save the results you approve to your HeriBase collection.
+Give Codex, Claude Code, or another compatible desktop agent a photo of each side of a coin. After you sign in to HeriBase and approve the photos, review the suggested match in chat and decide whether to save it. You can also organize a folder of coin photos or a spreadsheet, flag missing photos, and resume your work later.
 
-**[Quick start](#quick-start)** · [See the workflow](#from-five-photos-to-three-coin-records) · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
+**[Identify your first coin](#identify-one-coin-and-decide-whether-to-save-it)** · [Quick start](#quick-start) · [See the workflow](#from-five-photos-to-three-coin-records) · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
 
 **[See what we verified](docs/verification.md)** · HeriBase mobile app: [App Store](https://apps.apple.com/us/app/heribase-ai-coin-identifier/id6762598274) · [Google Play](https://play.google.com/store/apps/details?id=com.weipaitang.coin)
 
@@ -38,7 +38,7 @@ Copy this into Codex, Claude Code, or another desktop agent that supports Skills
 ```text
 Install all six HeriBase Skills from https://github.com/HeriBase/heribase-ability-skills.
 Follow the README: copy the skills into my agent's Skills directory and run setup.py --init.
-Tell me when I can start. If I need to sign in to HeriBase, let me finish in the browser.
+When setup is ready, help me identify my first coin from photos of both sides. Let me finish any HeriBase sign-in in the browser.
 ```
 
 <details>
@@ -70,6 +70,14 @@ For Claude Code, Gemini CLI, or OpenCode, replace `codex` with `claude-code`, `g
 
 [Installation and troubleshooting](docs/installation.md)
 
+### Identify one coin and decide whether to save it
+
+After [setup](#quick-start), attach a clear photo of each side and paste the prompt below. Sign in to HeriBase when asked, then review the photos before submitting them. Check the suggested year, denomination, and mint mark or reference value if available. You can stop after reviewing the result or choose to save it to your collection.
+
+```text
+Identify this coin from these two photos with HeriBase. Show me the suggested match and what I should check before saving it.
+```
+
 ## Try it with your photos
 
 [Download the five sample photos](docs/coin-photo-sample.zip) · Unzip the folder and use the photo-pairing prompt below. If the agent leaves photos separate, check them in the workbench. The [recorded run](docs/verification.md#five-photo-workbench-check) includes the reference pairs.
@@ -90,14 +98,6 @@ Give the agent an Excel workbook with embedded photos or image links. It can mak
 
 ```text
 Organize this coin spreadsheet. Keep the original worksheet and row for each record, and show me which rows have missing or unreadable photos.
-```
-
-### Identify one coin and decide whether to save it
-
-Send clear photos of both sides. Review the photos your agent will submit. When HeriBase returns a suggested match, compare the year, denomination, and any mint mark or reference value supplied for that coin. Save it to your collection when the result looks right.
-
-```text
-Identify this coin from these two photos. Show me the result and any fields I should check before I decide whether to add it to my collection.
 ```
 
 ## Keep going with the same collection
