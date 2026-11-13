@@ -4,7 +4,7 @@
 
 Vous avez des photos de pièces sans nom ou un tableur avec des images ? Confiez le lot à Codex, Claude Code ou à un autre agent IA compatible. HeriBase Connector l’aide à associer avers et revers, signaler les photos manquantes, identifier les pièces de votre choix et enregistrer dans HeriBase les résultats que vous avez vérifiés.
 
-**[Démarrage rapide](#démarrage-rapide)** · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md)
+**[Démarrage rapide](#démarrage-rapide)** · [Voir le déroulement](#de-cinq-photos-à-trois-fiches) · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · **Français**
 
@@ -68,19 +68,65 @@ Pour Claude Code, Gemini CLI ou OpenCode, remplacez `codex` par `claude-code`, `
 
 ## Essayez avec vos photos
 
-> Trie les photos de pièces de ce dossier. Associe les avers et les revers, signale les photos manquantes et les paires incertaines, et attends ma vérification avant de lancer l’identification.
+[Télécharger les cinq photos d’exemple](coin-photo-sample.zip) · Décompressez les cinq JPEG et utilisez la demande d’association ci-dessous. Vous pourrez comparer le résultat avec la démonstration.
+
+### Triez tout un dossier de photos
+
+Confiez à l’agent vos photos de bourse, de voyage ou d’archives. Il associe les faces, puis signale les photos manquantes, les doublons possibles et les paires incertaines.
+
+```text
+Trie ces photos de pièces. Associe les avers et les revers et montre-moi les photos manquantes, les doublons possibles et les paires incertaines avant l’identification.
+```
+
+## Que faire avec votre collection ?
+
+### Repartez de votre catalogue Excel
+
+Avec un tableur qui contient des images ou des liens, l’agent prépare une fiche par ligne et conserve le nom de la feuille et le numéro de ligne. Les images manquantes ou illisibles restent à vérifier.
+
+```text
+Organise ce tableur. Conserve la feuille et le numéro de ligne, et indique quelles photos sont manquantes ou illisibles.
+```
+
+### Identifiez une pièce avant de l’enregistrer
+
+Vérifiez les photos sélectionnées. Comparez la pièce proposée avec l’année, la valeur faciale et les autres données fournies par HeriBase. Vous choisissez ensuite d’ajouter la fiche à votre collection.
+
+```text
+Identifie la pièce sur ces deux photos. Montre-moi le résultat avant que je décide de l’ajouter à ma collection.
+```
 
 ## Continuez à gérer votre collection
 
-- **Reprenez un lot en cours.** Retrouvez les photos d’origine, les paires validées et l’avancement de la vérification.
-- **Suivez le prix de vos pièces.** Demandez les derniers prix disponibles pour les pièces que vous suivez dans HeriBase.
-- **Suivez une expertise.** Consultez l’état de l’expertise et ouvrez le rapport dès qu’il est prêt.
+### Reprenez le même lot plus tard
+
+L’espace de travail garde les photos d’origine, les paires vérifiées et les tâches en attente. Si vous retrouvez une photo manquante, vous pouvez l’ajouter au même lot.
+
+```text
+Reprends le dernier lot de pièces. Montre-moi les photos qui manquent et les résultats d’identification que je dois encore vérifier.
+```
+
+Vous pouvez également consulter les derniers prix disponibles des pièces suivies et vérifier l’avancement ou le rapport d’une expertise.
 
 ## Avant de commencer
 
-- Vous pouvez trier des photos avant de vous connecter à HeriBase. Votre agent IA peut faire traiter les images par son propre fournisseur. L’identification en ligne et les actions sur votre compte nécessitent une connexion à HeriBase.
-- Vous pouvez travailler dans la conversation ou ouvrir l’espace de travail local pour vérifier les photos. Le tri automatique des photos ajoutées à cet espace nécessite une session active dans Codex CLI.
-- Les identifications et les prix de référence aident à faire des recherches. Ils ne certifient pas l’authenticité d’une pièce et ne garantissent pas son prix de vente.
+### Questions fréquentes
+
+**Dois-je me connecter pour essayer ?**
+
+Vous pouvez associer les photos d’exemple avant de vous connecter. L’identification en ligne et les actions sur votre compte nécessitent une connexion à HeriBase. Le fournisseur de votre agent peut traiter les images que vous lui transmettez.
+
+**Puis-je rester dans la conversation ?**
+
+Oui. Ouvrez l’espace de travail local pour examiner les photos de plus près. Le tri automatique après un envoi depuis cet espace requiert une session active dans Codex CLI.
+
+**Et s’il manque la photo d’une face ?**
+
+La face manquante est signalée. Vous pouvez traiter les paires complètes, puis ajouter la photo au même lot ultérieurement.
+
+**L’identification certifie-t-elle l’authenticité ?**
+
+Le résultat et le prix de référence aident à faire des recherches. HeriBase propose séparément une expertise.
 
 <details>
 <summary>Skills incluses</summary>

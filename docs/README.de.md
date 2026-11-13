@@ -4,7 +4,7 @@
 
 Hast du viele unbenannte Münzfotos oder eine Tabelle mit Bildern? Gib den ganzen Stapel an Codex, Claude Code oder einen anderen kompatiblen KI-Agenten. Mit HeriBase Connector kann er Vorder- und Rückseiten zuordnen, fehlende Fotos markieren, ausgewählte Münzen bestimmen und geprüfte Ergebnisse in deiner HeriBase-Sammlung speichern.
 
-**[Schnellstart](#schnellstart)** · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md)
+**[Schnellstart](#schnellstart)** · [Ablauf ansehen](#aus-fünf-fotos-werden-drei-münzeinträge) · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · **Deutsch** · [Français](README.fr.md)
 
@@ -68,19 +68,65 @@ Ersetze für Claude Code, Gemini CLI oder OpenCode `codex` durch `claude-code`, 
 
 ## Mit eigenen Fotos ausprobieren
 
-> Ordne die Münzfotos in diesem Ordner nach Vorder- und Rückseiten zu. Zeig mir fehlende Fotos und unsichere Paare. Warte mit der Bestimmung, bis ich die Paare geprüft habe.
+[Fünf Beispielfotos herunterladen](coin-photo-sample.zip) · Entpacke die fünf JPEGs und verwende die folgende Anweisung zum Zuordnen der Fotos. Vergleiche das Ergebnis mit der Vorschau.
+
+### Einen ganzen Fotoordner sortieren
+
+Gib dem Agenten Münzfotos von einer Messe, einer Reise oder aus einem alten Backup. Er ordnet passende Seiten zu und zeigt fehlende Fotos, mögliche Duplikate und unsichere Paare.
+
+```text
+Sortiere diese Münzfotos. Ordne Vorder- und Rückseiten zu und zeige mir fehlende Fotos, mögliche Duplikate und unsichere Paare vor der Bestimmung.
+```
+
+## Was du mit deiner Sammlung machen kannst
+
+### Einen vorhandenen Katalog übernehmen
+
+Aus einer Excel-Tabelle mit Bildern oder Bildlinks kann der Agent einen Entwurf pro Zeile anlegen. Tabellenblatt und Zeilennummer bleiben erhalten. Fehlende oder unlesbare Bilder werden zur Prüfung markiert.
+
+```text
+Ordne diese Münztabelle. Behalte Blatt und Zeilennummer bei und markiere Zeilen mit fehlenden oder unlesbaren Bildern.
+```
+
+### Eine Münze bestimmen und dann speichern
+
+Prüfe die Fotos, die du zur Bestimmung freigibst. Vergleiche den Vorschlag mit Jahr, Nennwert und weiteren von HeriBase gelieferten Angaben. Danach entscheidest du, ob du die Münze speicherst.
+
+```text
+Bestimme die Münze auf diesen beiden Fotos. Zeig mir das Ergebnis, bevor ich entscheide, ob ich sie in meiner Sammlung speichere.
+```
 
 ## Arbeite mit deiner Sammlung weiter
 
-- **Setze einen Stapel fort.** Greif auf die Originalfotos, bestätigten Paare und den bisherigen Prüfstand zu.
-- **Verfolge die Preise deiner Münzen.** Frag nach den neuesten verfügbaren Preisen für die Münzen, die du in HeriBase beobachtest.
-- **Prüfe den Stand einer Begutachtung.** Sieh nach, wie weit die Prüfung ist, und öffne den Bericht, sobald er vorliegt.
+### An einem anderen Tag weitermachen
+
+Die Originalfotos, geprüften Paare und offenen Schritte bleiben im Arbeitsbereich. Sobald du das fehlende Foto findest, kannst du es im selben Stapel ergänzen.
+
+```text
+Setze den letzten Münzstapel fort. Zeig mir fehlende Fotos und die Bestimmungsergebnisse, die ich noch prüfen muss.
+```
+
+Außerdem kannst du die neuesten verfügbaren Preise beobachteter Münzen oder den Stand und Bericht einer Expertenbegutachtung abrufen.
 
 ## Vor dem Start
 
-- Fotos lassen sich vor der Anmeldung bei HeriBase sortieren. Dein KI-Agent kann Bilder über seinen eigenen Anbieter verarbeiten. Für die Online-Bestimmung und Kontoaktionen musst du dich bei HeriBase anmelden.
-- Du kannst im Chat arbeiten oder Fotos im lokalen Arbeitsbereich prüfen. Damit dort hochgeladene Fotos automatisch sortiert werden, musst du bei Codex CLI angemeldet sein.
-- Bestimmungen und Referenzpreise dienen als Orientierung. Sie bestätigen weder die Echtheit einer Münze noch einen Verkaufspreis.
+### Häufig gestellte Fragen
+
+**Brauche ich zum Ausprobieren ein Konto?**
+
+Du kannst die Beispielfotos vor der Anmeldung zuordnen. Für Online-Bestimmung und Kontoaktionen meldest du dich bei HeriBase an. Dein Agentenanbieter kann die übergebenen Bilder verarbeiten.
+
+**Kann ich im Chat bleiben?**
+
+Ja. Zum genauen Prüfen kannst du den lokalen Arbeitsbereich öffnen. Die automatische Zuordnung nach einem Upload dort setzt eine aktive Codex-CLI-Anmeldung voraus.
+
+**Was passiert, wenn ein Foto fehlt?**
+
+Die fehlende Seite wird markiert. Die vollständigen Paare kannst du zuerst bearbeiten und das fehlende Foto später im selben Stapel ergänzen.
+
+**Bestätigt die Bestimmung die Echtheit?**
+
+Münzvorschläge und Referenzpreise helfen bei der Recherche. HeriBase bietet eine separate Expertenbegutachtung.
 
 <details>
 <summary>Enthaltene Skills</summary>

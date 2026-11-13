@@ -4,7 +4,7 @@
 
 ¿Tienes fotos de monedas sin nombrar o una hoja de cálculo con imágenes? Dale todo el lote a Codex, Claude Code u otro agente de IA compatible. HeriBase Connector le ayuda a emparejar anversos y reversos, señalar las fotos que faltan, identificar las monedas que elijas y guardar en HeriBase los resultados que apruebes.
 
-**[Inicio rápido](#inicio-rápido)** · [Sitio oficial de HeriBase](https://www.heribase.com/es/) · [Novedades (en inglés)](../CHANGELOG.md)
+**[Inicio rápido](#inicio-rápido)** · [Ver cómo funciona](#de-cinco-fotos-a-tres-fichas-de-monedas) · [Sitio oficial de HeriBase](https://www.heribase.com/es/) · [Novedades (en inglés)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · **Español** · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
@@ -68,19 +68,65 @@ Si usas Claude Code, Gemini CLI u OpenCode, cambia `codex` por `claude-code`, `g
 
 ## Pruébalo con tus fotos
 
-> Organiza las fotos de monedas de esta carpeta. Empareja anversos y reversos, señala las fotos que faltan y los pares dudosos, y espera a que los revise antes de identificar las monedas.
+[Descargar las cinco fotos de muestra](coin-photo-sample.zip) · Descomprime el archivo y prueba el mensaje de emparejamiento con los cinco JPEG. Puedes comparar tus resultados con el ejemplo.
+
+### Ordena una carpeta de fotos de una vez
+
+Dale al agente las fotos de una feria, un viaje o una copia antigua. Agrupa las caras que puede emparejar y te muestra las fotos que faltan, los posibles duplicados y las parejas dudosas.
+
+```text
+Organiza estas fotos de monedas. Empareja anversos y reversos y señala las fotos que falten, los duplicados y las parejas dudosas antes de identificar las monedas.
+```
+
+## Qué puedes hacer con tu colección
+
+### Aprovecha el catálogo que ya tienes
+
+Si tu archivo de Excel contiene imágenes o enlaces a ellas, el agente puede preparar una ficha por fila y conservar la hoja y el número de fila. Las imágenes ausentes o ilegibles quedan pendientes de revisión.
+
+```text
+Organiza esta hoja de monedas. Conserva la hoja y la fila de origen e indica qué filas tienen fotos que faltan o que no se pueden leer.
+```
+
+### Identifica una moneda antes de guardarla
+
+Confirma las fotos que se enviarán. Cuando veas la sugerencia, compara el año, el valor facial y las demás características que HeriBase haya devuelto. Tú decides si se guarda en la colección.
+
+```text
+Identifica esta moneda con estas dos fotos. Muéstrame el resultado antes de que decida si la añado a mi colección.
+```
 
 ## Sigue trabajando con tu colección
 
-- **Retoma un lote.** Conserva las fotos originales, los pares que revisaste y el punto en el que te quedaste.
-- **Consulta los precios de tus monedas.** Pide al agente los últimos precios disponibles para las monedas que sigues en HeriBase.
-- **Consulta una tasación.** Revisa el estado de una tasación por un especialista y abre el informe cuando esté listo.
+### Retoma el trabajo otro día
+
+El espacio de trabajo conserva las fotos, las parejas que revisaste y los asuntos pendientes. Cuando encuentres una foto que falte, puedes añadirla al mismo lote.
+
+```text
+Retoma el último lote de monedas. Muéstrame cuáles necesitan fotos y qué identificaciones quedan por revisar.
+```
+
+También puedes consultar los últimos precios disponibles de las monedas que sigues y revisar el estado o el informe de una tasación por un especialista.
 
 ## Antes de empezar
 
-- Puedes ordenar las fotos sin iniciar sesión en HeriBase. El agente de IA puede procesarlas a través de su propio proveedor. La identificación en línea y las acciones en tu cuenta requieren iniciar sesión en HeriBase.
-- Puedes trabajar en el chat o revisar las fotos en el espacio de trabajo local. Para ordenar automáticamente las fotos que subas a ese espacio, necesitas tener una sesión iniciada en Codex CLI.
-- La identificación y los precios de referencia sirven para investigar. No certifican la autenticidad de una moneda ni garantizan su precio de venta.
+### Preguntas frecuentes
+
+**¿Tengo que iniciar sesión para probarlo?**
+
+Puedes empezar emparejando las fotos de muestra. Para identificar monedas en línea o usar tu cuenta, inicia sesión en HeriBase. El proveedor de tu agente puede procesar las imágenes que le envíes.
+
+**¿Puedo seguir en el chat?**
+
+Sí. Abre el espacio de trabajo local cuando quieras revisar las fotos en detalle. Para ordenar automáticamente las fotos que subas allí, necesitas una sesión activa en Codex CLI.
+
+**¿Y si solo tengo una cara?**
+
+El agente señala la cara que falta. Puedes continuar con los pares completos y añadir la foto al mismo lote después.
+
+**¿La identificación certifica la autenticidad?**
+
+Usa el resultado y el precio de referencia como pistas para investigar. La tasación por un especialista es un servicio separado de HeriBase.
 
 <details>
 <summary>Qué incluye</summary>
