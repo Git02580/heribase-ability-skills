@@ -1,5 +1,5 @@
-# HeriBase Skills 安装
+# Install HeriBase Skills
 
-完整步骤已移到随技能分发的 [安装与环境检查](heribase-cli/references/installation.md)，通过 npx 或手动安装后仍可阅读。
+See the [English installation and troubleshooting guide](../docs/installation.md) for requirements, the installation command, and first-run setup.
 
-初次了解项目，请从 [README](../README.md) 开始。
+The [Simplified Chinese guide](heribase-cli/references/installation.md) is also bundled with the CLI Skill. To see how the Connector works with a batch of coin photos, start with the [collector walkthrough](../README.md).
