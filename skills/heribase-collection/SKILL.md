@@ -3,7 +3,7 @@ name: heribase-collection
 description: Use whenever a user wants to organize coin photos, graded slabs, spreadsheet coin rows or embedded images; create or resume a persistent HeriBase coin task; review pairings for the current task on the Add Coin workbench page; identify selected coins and review results; or add, edit, or cancel explicitly confirmed HeriBase collection records. This is the user-facing workflow skill for the complete input → organization → identification → review → confirmed collection flow.
 compatibility: Python 3.9+; a desktop browser; companion heribase-workspace, heribase-task-package and heribase-cli skills.
 metadata:
-  short-description: 本地硬币资料整理、识别与收藏
+  short-description: Organize, identify, and save coins to your collection
 ---
 
 # HeriBase Collection
