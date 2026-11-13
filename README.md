@@ -1,14 +1,31 @@
 # HeriBase Connector
 
-<a href="https://www.heribase.com/"><img src="docs/heribase-icon.png" alt="HeriBase" width="64" height="64"></a>
+**Turn a folder of coin photos into a collection.**
 
-**Agent Skills for coin collectors**
+If you have a camera roll full of unnamed coin photos or a spreadsheet with images, give the whole batch to Codex, Claude Code, or another compatible AI agent. HeriBase Connector helps it pair fronts and backs, flag missing photos, identify the coins you choose, and save the results you approve to your HeriBase collection.
 
-Send coin photos to your AI agent. It can sort and pair the photos, identify the coins with HeriBase, and help you add reviewed results to your collection.
+**[Quick start](#quick-start)** · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
 
-[HeriBase website](https://www.heribase.com/) · [Installation and troubleshooting](docs/installation.md)
+**English** · [Chinese (Simplified)](docs/README.zh-CN.md) · [Chinese (Traditional)](docs/README.zh-HK.md) · [Japanese](docs/README.ja.md) · [Spanish](docs/README.es.md) · [Portuguese (Brazil)](docs/README.pt-BR.md) · [German](docs/README.de.md) · [French](docs/README.fr.md)
 
-**English** · [简体中文](docs/README.zh-CN.md) · [繁體中文](docs/README.zh-HK.md) · [日本語](docs/README.ja.md) · [Español](docs/README.es.md) · [Português (Brasil)](docs/README.pt-BR.md) · [Deutsch](docs/README.de.md) · [Français](docs/README.fr.md)
+## From five photos to three coin records
+
+Imagine a folder with both sides of two coins and only the front of a third. Your agent groups the two complete pairs and flags the missing back photo. You can identify the two ready coins now and finish the third when you have its other side.
+
+![HeriBase workbench showing two complete front-and-back pairs and a third coin missing its back photo](docs/demo-photo-pairs.webp)
+
+*Workbench demo with sample photos and an English translation of the interface.* [Demo photo credits](docs/demo-credits.md)
+
+<details>
+<summary>See what an identification looks like</summary>
+
+After you approve the photos for identification, the workbench shows the suggested coin and the details HeriBase returns. Compare the year and denomination with your photos, then choose whether to save the record.
+
+![Sample identification card for an 1860 Indian Head cent, with both photos and the Save to collection action](docs/demo-identification.webp)
+
+*Sample identification data shown for illustration.*
+
+</details>
 
 ## Quick start
 
@@ -47,18 +64,19 @@ For Claude Code, Gemini CLI, or OpenCode, replace `codex` with `claude-code`, `g
 
 </details>
 
-## Try it with your coins
+[Installation and troubleshooting](docs/installation.md)
 
-1. **Send the front and back photos.** For a batch, ask your agent to pair the two sides and show any uncertain matches.
-2. **Confirm identification.** Review the selected photos before your agent sends them to HeriBase for identification.
-3. **Review and save.** Check the suggested coin and details, then ask your agent to add it to your HeriBase collection.
+## Try it with your photos
 
-## What you can ask
+```text
+Organize the coin photos in this folder. Pair the fronts and backs, show me any missing or uncertain photos, and let me review the pairs before identification.
+```
 
-- “Pair the front and back photos in this folder. Show me the pairs you're unsure about.”
-- “Identify this coin. Let me check the result before adding it to my collection.”
-- “Check the status of my expert appraisal.”
-- “Show the latest prices available for coins I'm tracking.”
+## Keep going with the same collection
+
+- **Pick up where you left off.** Return to a saved batch with its original photos, pairing decisions, and review progress.
+- **Follow coins you already own.** Ask for the latest available prices for the coins you track in HeriBase.
+- **Check an expert appraisal.** Find out where an appraisal stands and open its report when it is ready.
 
 ## Before you start
 
