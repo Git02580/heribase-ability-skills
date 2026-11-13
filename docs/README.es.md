@@ -4,13 +4,13 @@
 
 ¿Tienes fotos de monedas sin nombrar o una hoja de cálculo con imágenes? Dale todo el lote a Codex, Claude Code u otro agente de IA compatible. HeriBase Connector le ayuda a emparejar anversos y reversos, señalar las fotos que faltan, identificar las monedas que elijas y guardar en HeriBase los resultados que apruebes.
 
-**[Inicio rápido](#inicio-rápido)** · [Ver cómo funciona](#de-cinco-fotos-a-tres-fichas-de-monedas) · [Sitio oficial de HeriBase](https://www.heribase.com/es/) · [Novedades (en inglés)](../CHANGELOG.md)
+**[Inicio rápido](#inicio-rápido)** · [Ver cómo funciona](#de-cinco-fotos-a-tres-fichas-de-monedas) · [Sitio oficial de HeriBase](https://www.heribase.com/es/) · [Novedades (en inglés)](../CHANGELOG.md) · [Ver la comprobación (en inglés)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · **Español** · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
 ## De cinco fotos a tres fichas de monedas
 
-Imagina una carpeta con ambas caras de dos monedas y solo el anverso de una tercera. El agente reúne los dos pares completos y marca el reverso que falta. Puedes identificar ya las dos primeras y volver a la tercera cuando tengas la otra foto.
+La muestra incluye las dos caras de dos monedas y solo el anverso de una tercera. En dos pruebas con Codex, las cinco fotos quedaron separadas. Tras revisarlas manualmente, guardamos dos pares y dejamos indicada la falta del reverso de la tercera moneda. [Ver la comprobación (en inglés)](verification.md#five-photo-workbench-check)
 
 ![Espacio de trabajo de HeriBase con dos pares completos y una tercera moneda a la que le falta el reverso](demo-photo-pairs.webp)
 

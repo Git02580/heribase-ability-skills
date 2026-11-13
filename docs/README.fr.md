@@ -4,13 +4,13 @@
 
 Vous avez des photos de pièces sans nom ou un tableur avec des images ? Confiez le lot à Codex, Claude Code ou à un autre agent IA compatible. HeriBase Connector l’aide à associer avers et revers, signaler les photos manquantes, identifier les pièces de votre choix et enregistrer dans HeriBase les résultats que vous avez vérifiés.
 
-**[Démarrage rapide](#démarrage-rapide)** · [Voir le déroulement](#de-cinq-photos-à-trois-fiches) · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md)
+**[Démarrage rapide](#démarrage-rapide)** · [Voir le déroulement](#de-cinq-photos-à-trois-fiches) · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md) · [Voir les résultats du test (en anglais)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · **Français**
 
 ## De cinq photos à trois fiches
 
-Imaginez un dossier avec les deux faces de deux pièces et seulement l’avers d’une troisième. L’agent rassemble les deux paires complètes et vous signale le revers manquant. Vous pouvez faire identifier les deux premières pièces, puis reprendre la troisième après avoir ajouté sa photo.
+L’exemple contient les deux faces de deux pièces et seulement l’avers d’une troisième. Lors de deux essais avec Codex, les cinq photos sont restées séparées. Après vérification manuelle, nous avons enregistré deux paires ; il manque toujours le revers de la troisième pièce. [Voir les résultats du test (en anglais)](verification.md#five-photo-workbench-check)
 
 ![Espace HeriBase avec deux paires complètes et une troisième pièce dont la photo du revers manque](demo-photo-pairs.webp)
 

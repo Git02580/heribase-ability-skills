@@ -4,13 +4,13 @@
 
 相簿裏有一堆未命名的錢幣相片，或已有一份附圖的試算表？把整批資料交給 Codex、Claude Code 或其他相容的 AI 助手。HeriBase Connector 可協助配對正反面、標示欠缺的相片、辨識你選定的錢幣，並把你核對過的結果加入 HeriBase 收藏。
 
-**[快速上手](#快速上手)** · [查看工作流程](#5-張相片整理成-3-枚錢幣的記錄) · [HeriBase 官方網站](https://www.heribase.com/zh-HK/) · [更新記錄（英文）](../CHANGELOG.md)
+**[快速上手](#快速上手)** · [查看工作流程](#5-張相片整理成-3-枚錢幣的記錄) · [HeriBase 官方網站](https://www.heribase.com/zh-HK/) · [更新記錄（英文）](../CHANGELOG.md) · [查看實測記錄（英文）](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
 ## 5 張相片，整理成 3 枚錢幣的記錄
 
-假設資料夾裏有兩枚錢幣的正反面，第三枚只有正面。助手會整理出兩組完整相片，並提示第三枚欠缺反面。你可先辨識相片齊全的兩枚，稍後補圖再繼續。
+範例包含兩枚錢幣的正反面，以及第三枚的正面。用 Codex 實測兩次，5 張相片均已保留，自動整理沒有合併。手動確認並儲存兩組正反面後，第三枚仍標示為欠缺反面。 [查看實測記錄（英文）](verification.md#five-photo-workbench-check)
 
 ![HeriBase 工作台顯示兩組齊全的正反面相片，以及一枚欠缺反面的錢幣](demo-photo-pairs.webp)
 

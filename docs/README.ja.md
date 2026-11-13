@@ -4,13 +4,13 @@
 
 名前を付けていないコイン写真や、画像付きの表がたまっていませんか？まとめて Codex、Claude Code などの対応する AI エージェントに渡せます。HeriBase Connector が表裏の組み合わせや不足写真の確認を手伝い、選んだコインを識別し、確認済みの結果を HeriBase のコレクションに保存できます。
 
-**[クイックスタート](#クイックスタート)** · [作業の流れを見る](#5枚の写真から3枚のコインを整理) · [HeriBase 公式サイト](https://www.heribase.com/ja/) · [更新履歴（英語）](../CHANGELOG.md)
+**[クイックスタート](#クイックスタート)** · [作業の流れを見る](#5枚の写真から3枚のコインを整理) · [HeriBase 公式サイト](https://www.heribase.com/ja/) · [更新履歴（英語）](../CHANGELOG.md) · [検証結果を見る（英語）](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · **日本語** · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
 ## 5枚の写真から3枚のコインを整理
 
-2枚のコインは表裏がそろっていて、3枚目は表の写真しかないとします。エージェントはそろった2組をまとめ、3枚目の裏面がないことを知らせます。まず2枚を識別し、残りは写真を追加してから続けられます。
+サンプルには、2枚のコインの表裏と、3枚目の表の写真が入っています。Codex で2回試したところ、どちらも5枚の写真は個別に保存されました。目視で2組の表裏を確認して保存し、3枚目は裏面が不足した状態で残しました。 [検証結果を見る（英語）](verification.md#five-photo-workbench-check)
 
 ![表裏がそろった2枚のコインと、裏面の写真がない1枚を表示した HeriBase の作業画面](demo-photo-pairs.webp)
 

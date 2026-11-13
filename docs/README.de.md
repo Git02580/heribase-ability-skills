@@ -4,13 +4,13 @@
 
 Hast du viele unbenannte Münzfotos oder eine Tabelle mit Bildern? Gib den ganzen Stapel an Codex, Claude Code oder einen anderen kompatiblen KI-Agenten. Mit HeriBase Connector kann er Vorder- und Rückseiten zuordnen, fehlende Fotos markieren, ausgewählte Münzen bestimmen und geprüfte Ergebnisse in deiner HeriBase-Sammlung speichern.
 
-**[Schnellstart](#schnellstart)** · [Ablauf ansehen](#aus-fünf-fotos-werden-drei-münzeinträge) · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md)
+**[Schnellstart](#schnellstart)** · [Ablauf ansehen](#aus-fünf-fotos-werden-drei-münzeinträge) · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md) · [Testergebnisse ansehen (auf Englisch)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · **Deutsch** · [Français](README.fr.md)
 
 ## Aus fünf Fotos werden drei Münzeinträge
 
-In einem Ordner liegen Vorder- und Rückseiten von zwei Münzen und nur die Vorderseite einer dritten. Der Agent gruppiert die beiden vollständigen Paare und zeigt dir, welche Rückseite fehlt. Bestimme die ersten beiden Münzen gleich und ergänze die dritte später.
+Die Beispielfotos zeigen beide Seiten von zwei Münzen und nur die Vorderseite einer dritten. In zwei Testläufen mit Codex blieben alle fünf Fotos zunächst getrennt. Nach der manuellen Prüfung wurden zwei Paare gespeichert; bei der dritten Münze fehlt die Rückseite. [Testergebnisse ansehen (auf Englisch)](verification.md#five-photo-workbench-check)
 
 ![HeriBase-Arbeitsbereich mit zwei vollständigen Fotopaaren und einer dritten Münze ohne Rückseitenfoto](demo-photo-pairs.webp)
 

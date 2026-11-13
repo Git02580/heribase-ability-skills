@@ -1,0 +1,52 @@
+{
+  "run_at_utc": "2026-11-13T06:16:03+00:00",
+  "connector_revision": "482759c8136aebdb10c0e64fc74b16b52d7845e6",
+  "codex": "codex-cli 0.167.0-alpha.4.1",
+  "environment": "Darwin arm64; Python 3.12.3",
+  "method": "Published workspace organizer with a signed-in Codex CLI",
+  "sample_archive_sha256": "81fa34d2157d241efc0166ccf651189204d363c622839b1473904ded090e8497",
+  "inputs_sha256": {
+    "IMG_1021.jpg": "fe123a257fa589ec1340c61aead2555c8fbffe8966965043121a2cd1ab2b9a17",
+    "IMG_1022.jpg": "60f041d124550f6d615e8c5b23094fa722c5670201d7a041cca9b47f831c876e",
+    "IMG_1023.jpg": "f6ee2b412b791c51f822659d4901b123e8a3fdaa530ad36bb210f7e2f292abca",
+    "IMG_1024.jpg": "e5f341622d1bdbda75e07ac0d6355019bb015454b26078f2af4b3515400f9478",
+    "IMG_1025.jpg": "23c1cdfd6a6ea7d75b4bca04b9df66b480fc397a4e4072377d05dab52c9ac549"
+  },
+  "package_integrity_ok": true,
+  "saved_result_verified": true,
+  "heribase_online_identification_performed": false,
+  "saved_to_heribase_collection": false,
+  "elapsed_seconds": 55.2,
+  "automatic_result": [
+    {
+      "front": null,
+      "back": "IMG_1021.jpg",
+      "uncertain_photos": [],
+      "state": "single_side"
+    },
+    {
+      "front": null,
+      "back": "IMG_1025.jpg",
+      "uncertain_photos": [],
+      "state": "single_side"
+    },
+    {
+      "front": "IMG_1022.jpg",
+      "back": null,
+      "uncertain_photos": [],
+      "state": "single_side"
+    },
+    {
+      "front": "IMG_1023.jpg",
+      "back": null,
+      "uncertain_photos": [],
+      "state": "single_side"
+    },
+    {
+      "front": "IMG_1024.jpg",
+      "back": null,
+      "uncertain_photos": [],
+      "state": "single_side"
+    }
+  ]
+}

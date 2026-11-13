@@ -1,0 +1,56 @@
+{
+  "run_date": "2026-11-13",
+  "connector_revision": "482759c8136aebdb10c0e64fc74b16b52d7845e6",
+  "environment": "macOS (arm64), separate fresh user directories",
+  "skills_installer_version": "1.8.1",
+  "codex_cli_version": "0.167.0-alpha.4.1",
+  "method": "Run the install command for each source, run setup.py --init, then inspect skills/list and the six explicitly loaded SKILL.md bodies in the request from a fresh Codex session. A local fixture captured the request; no model answer or HeriBase account action was tested.",
+  "installs": [
+    {
+      "source": "HeriBase/heribase-ability-skills",
+      "node": "v24.14.0",
+      "python": "3.12.3",
+      "initialized_ok": true,
+      "signed_in_to_heribase": false,
+      "installed_skill_manifest_sha256": {
+        "heribase-appraisal": "92a9d7a28833af4c385866464bc06f505d8cb5ba1aabae4d9fb2d322d4d0b682",
+        "heribase-cli": "d34be05d4f4b56b5571cdc415d9db1755bab15f8cb1e973862fcafe33c67d17f",
+        "heribase-collection": "9313da5860d5714d7a555d57910bd812779a0166e5b02d271530121453d37060",
+        "heribase-task-package": "52550094c9a8d8ed5d265637aed6522071be294f30e518aeef0ef3658cead404",
+        "heribase-tracking": "df3fb5d8b2c6b82e76765bb0e069044624f3b556d2badad0fcf44064666f2f1f",
+        "heribase-workspace": "91d1428ec072696d16f0fee6a7a4ec549244184d89864048ef0a1b53929feba4"
+      },
+      "codex_discovered_and_loaded_full_instructions": [
+        "heribase-appraisal",
+        "heribase-cli",
+        "heribase-collection",
+        "heribase-task-package",
+        "heribase-tracking",
+        "heribase-workspace"
+      ]
+    },
+    {
+      "source": "Git02580/heribase-ability-skills",
+      "node": "v24.14.0",
+      "python": "3.12.3",
+      "initialized_ok": true,
+      "signed_in_to_heribase": false,
+      "installed_skill_manifest_sha256": {
+        "heribase-appraisal": "92a9d7a28833af4c385866464bc06f505d8cb5ba1aabae4d9fb2d322d4d0b682",
+        "heribase-cli": "d34be05d4f4b56b5571cdc415d9db1755bab15f8cb1e973862fcafe33c67d17f",
+        "heribase-collection": "9313da5860d5714d7a555d57910bd812779a0166e5b02d271530121453d37060",
+        "heribase-task-package": "52550094c9a8d8ed5d265637aed6522071be294f30e518aeef0ef3658cead404",
+        "heribase-tracking": "df3fb5d8b2c6b82e76765bb0e069044624f3b556d2badad0fcf44064666f2f1f",
+        "heribase-workspace": "91d1428ec072696d16f0fee6a7a4ec549244184d89864048ef0a1b53929feba4"
+      },
+      "codex_discovered_and_loaded_full_instructions": [
+        "heribase-appraisal",
+        "heribase-cli",
+        "heribase-collection",
+        "heribase-task-package",
+        "heribase-tracking",
+        "heribase-workspace"
+      ]
+    }
+  ]
+}
