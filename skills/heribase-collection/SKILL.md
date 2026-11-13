@@ -1,12 +1,16 @@
 ---
 name: heribase-collection
-description: Use whenever a user wants to organize coin photos, graded slabs, spreadsheet coin rows or embedded images; create or resume a persistent HeriBase coin task; review pairings for the current task on the Add Coin workbench page; identify selected coins and review results; or add, edit, or cancel explicitly confirmed HeriBase collection records. This is the user-facing workflow skill for the complete input → organization → identification → review → confirmed collection flow.
+description: Identify a coin from clear photos of its front and back. Install all six HeriBase Skills together and sign in to HeriBase for online identification. Use this skill to review a suggested match, organize coin photos or spreadsheets, resume a batch, or add, edit, or remove records from your collection after you approve the change.
 compatibility: Python 3.9+; a desktop browser; companion heribase-workspace, heribase-task-package and heribase-cli skills.
 metadata:
-  short-description: Organize, identify, and save coins to your collection
+  short-description: Identify coins from photos and review the results
 ---
 
 # HeriBase Collection
+
+To try your first coin, install all six HeriBase Skills using the [Quick start](https://github.com/HeriBase/heribase-ability-skills#quick-start), then attach a clear photo of each side in your desktop agent. Sign in to HeriBase and review which photos will be sent before starting identification. Check the suggested match in chat and save it only if you choose.
+
+If this is the only HeriBase Skill installed, direct the user to the Quick start for the full bundle and initialization before using the companion skills below.
 
 将用户提供的散图、目录、XLSX 及装盒评级币照片整理成可恢复的审核任务，自动匹配有充分依据的正反面，再经独立确认完成选定钱币的识别和可选收藏。用户只使用“添加钱币”这一入口，不先选择单枚、批量或手动模式；上传数量和资料类型由 Agent 判断。批量上传、自动配对、批量审核和批量识别继续保留。对用户描述正在处理的钱币、照片和结果，不暴露 Skill、Tool、内部 ID 或内部阶段名称。
 
