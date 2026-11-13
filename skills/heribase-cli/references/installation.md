@@ -7,7 +7,7 @@
 优先根据当前 Agent 已配置的 skills 目录和用户希望的范围安装。用户级适用于多个项目；项目级仅对当前项目生效。不要把仓库源码目录直接当作安装位置。
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 将 `codex` 替换为 `claude-code`、`gemini-cli` 或 `opencode`。当前项目安装去掉 `--global`。同一条命令可在 macOS/Linux 终端与 Windows PowerShell 使用。没有 Node.js 时先完成下一节；使用 Git 来源时还需要 Git。
