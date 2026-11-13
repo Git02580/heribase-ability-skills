@@ -1,9 +1,9 @@
 ---
 name: heribase-tracking
-description: 在 HeriBase 从本人收藏开启钱币追踪，核对已有追踪位，查看追踪状态、真实行情与来源，或按明确意图更新标签、品相和续期。
-compatibility: 同级 heribase-workspace、heribase-task-package、heribase-cli；Python 3.9+ 和 Node.js 24+。
+description: Track coins from your HeriBase collection. Use when checking existing tracking slots, viewing tracking status and market data with sources, or updating labels, condition, or renewal at the user's request.
+compatibility: Python 3.9+, Node.js 24+, and companion heribase-workspace, heribase-task-package, and heribase-cli skills.
 metadata:
-  short-description: 本人收藏追踪与行情记录
+  short-description: Track coins and review their market data
 ---
 
 # HeriBase 追踪
