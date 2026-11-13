@@ -1,9 +1,9 @@
 ---
 name: heribase-workspace
-description: 启动、复用和恢复 HeriBase 持久化工作台，连接当前宿主 Agent 与网页，读取任务状态、接收协作请求、提交带版本的结构化业务操作，或备份恢复工作空间。供收藏、真人鉴定和追踪业务 Skill 共用。
-compatibility: Python 3.9+；同级 heribase-task-package；线上业务需要 Node.js 24+ 和新版 heribase CLI；现代桌面浏览器。
+description: Open or resume the HeriBase workbench, connect the current agent to the browser, inspect task progress, handle collaboration requests, apply versioned operations, or back up and restore the workspace used by the collection, appraisal, and tracking skills.
+compatibility: Python 3.9+, a modern desktop browser, and heribase-task-package. Online actions require Node.js 24+ and a current HeriBase CLI.
 metadata:
-  short-description: 持久化工作台与宿主双向协作
+  short-description: Open and resume the local HeriBase workbench
 ---
 
 # HeriBase 工作空间
