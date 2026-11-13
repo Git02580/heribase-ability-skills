@@ -4,7 +4,7 @@
 
 If you have a camera roll full of unnamed coin photos or a spreadsheet with images, give the whole batch to Codex, Claude Code, or another compatible AI agent. HeriBase Connector helps it pair fronts and backs, flag missing photos, identify the coins you choose, and save the results you approve to your HeriBase collection.
 
-**[Quick start](#quick-start)** · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
+**[Quick start](#quick-start)** · [See the workflow](#from-five-photos-to-three-coin-records) · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
 
 **English** · [Chinese (Simplified)](docs/README.zh-CN.md) · [Chinese (Traditional)](docs/README.zh-HK.md) · [Japanese](docs/README.ja.md) · [Spanish](docs/README.es.md) · [Portuguese (Brazil)](docs/README.pt-BR.md) · [German](docs/README.de.md) · [French](docs/README.fr.md)
 
@@ -68,21 +68,65 @@ For Claude Code, Gemini CLI, or OpenCode, replace `codex` with `claude-code`, `g
 
 ## Try it with your photos
 
+[Download the five sample photos](docs/coin-photo-sample.zip) · Unzip the folder and use the photo-pairing prompt below. The example starts with five JPEGs, so you can compare your result with the walkthrough.
+
+### Sort a folder of photos in one pass
+
+Point your agent at a folder of coin photos from a trip, a show, or an old backup. It groups the fronts and backs it can match and calls out missing photos, possible duplicates, and uncertain pairs. Review those exceptions before choosing what to identify.
+
 ```text
-Organize the coin photos in this folder. Pair the fronts and backs, show me any missing or uncertain photos, and let me review the pairs before identification.
+Organize the coin photos in this folder. Pair the fronts and backs, list any missing sides or uncertain pairs, and show me the results before identification.
+```
+
+## What you can do with your collection
+
+### Start with the catalog you already have
+
+Give the agent an Excel workbook with embedded photos or image links. It can make a draft entry for each row and keep the worksheet and row as its source. Rows with missing or unreadable pictures stay in the batch for you to fix.
+
+```text
+Organize this coin spreadsheet. Keep the original worksheet and row for each record, and show me which rows have missing or unreadable photos.
+```
+
+### Identify one coin and decide whether to save it
+
+Send clear photos of both sides. Review the photos your agent will submit. When HeriBase returns a suggested match, compare the year, denomination, and any mint mark or reference value supplied for that coin. Save it to your collection when the result looks right.
+
+```text
+Identify this coin from these two photos. Show me the result and any fields I should check before I decide whether to add it to my collection.
 ```
 
 ## Keep going with the same collection
 
-- **Pick up where you left off.** Return to a saved batch with its original photos, pairing decisions, and review progress.
-- **Follow coins you already own.** Ask for the latest available prices for the coins you track in HeriBase.
-- **Check an expert appraisal.** Find out where an appraisal stands and open its report when it is ready.
+### Finish a batch another day
+
+The workspace keeps the original files, the pairs you reviewed, and the work that is still open. Return to the same batch when you find a missing photo, and continue with the coins that still need attention.
+
+```text
+Resume the coin batch we worked on last time. Show me the coins that still need a photo and the identifications I have not reviewed.
+```
+
+For coins already in HeriBase, you can also check the latest available prices for items you track or look up the status and report of an expert appraisal.
 
 ## Before you start
 
-- You can organize photos before signing in to HeriBase. Your AI agent may process images through its own provider. Online identification and account actions require a HeriBase sign-in.
-- You can work in chat or open the local workbench to review photos. Automatic photo sorting after uploading in the workbench requires a signed-in Codex CLI.
-- Identifications and reference prices can help with research. They do not authenticate a coin or guarantee its selling price.
+### Frequently asked questions
+
+**Do I need to sign in before I try it?**
+
+You can pair the sample photos first. Sign in to HeriBase when you are ready to identify coins online or use your account. Depending on the agent you choose, its provider may process the images you give it.
+
+**Can I stay in my agent chat?**
+
+Yes. Start in the conversation and ask the agent to open the local workbench when you want a larger view. Automatic sorting after a workbench upload requires a signed-in Codex CLI. HeriBase has a separate sign-in.
+
+**What happens when a coin has only one photo?**
+
+The missing side is flagged. You can continue with the complete pairs and add the missing photo to the same batch later.
+
+**Can I use a suggested match to authenticate a coin?**
+
+Treat the suggested identity and any reference value as research aids. HeriBase offers a separate expert appraisal workflow.
 
 <details>
 <summary>What's included</summary>

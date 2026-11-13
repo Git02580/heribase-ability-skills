@@ -2,6 +2,7 @@
 
 ## Collector walkthrough
 
+- Added a downloadable five-photo sample, prompts for common collection tasks, and answers about sign-in and missing photos.
 - Added a photo pairing demo, a sample identification card, and a prompt to try with your own coin photos.
 - Updated all eight language guides and kept the installation shortcut at the top of each page.
 
