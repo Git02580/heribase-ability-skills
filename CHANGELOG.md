@@ -1,5 +1,11 @@
 # Changelog
 
+## Verification
+
+- Published a five-photo workbench run and a clean-install report with the exact Connector revision and the scope of each check.
+- Added public GitHub Actions checks for installation, setup, pairing, and collection safeguards.
+- Clarified where the sample needed manual pairing before the task could be resumed with two confirmed pairs.
+
 ## Collector walkthrough
 
 - Added a downloadable five-photo sample, prompts for common collection tasks, and answers about sign-in and missing photos.

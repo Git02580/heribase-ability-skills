@@ -6,15 +6,19 @@ If you have a camera roll full of unnamed coin photos or a spreadsheet with imag
 
 **[Quick start](#quick-start)** · [See the workflow](#from-five-photos-to-three-coin-records) · [HeriBase website](https://www.heribase.com/) · [What's new](CHANGELOG.md)
 
+**[See what we verified](docs/verification.md)** · HeriBase mobile app: [App Store](https://apps.apple.com/us/app/heribase-ai-coin-identifier/id6762598274) · [Google Play](https://play.google.com/store/apps/details?id=com.weipaitang.coin)
+
+[![Connector checks on GitHub](https://github.com/HeriBase/heribase-ability-skills/actions/workflows/connector-checks.yml/badge.svg?branch=main)](https://github.com/HeriBase/heribase-ability-skills/actions/workflows/connector-checks.yml)
+
 **English** · [Chinese (Simplified)](docs/README.zh-CN.md) · [Chinese (Traditional)](docs/README.zh-HK.md) · [Japanese](docs/README.ja.md) · [Spanish](docs/README.es.md) · [Portuguese (Brazil)](docs/README.pt-BR.md) · [German](docs/README.de.md) · [French](docs/README.fr.md)
 
 ## From five photos to three coin records
 
-Imagine a folder with both sides of two coins and only the front of a third. Your agent groups the two complete pairs and flags the missing back photo. You can identify the two ready coins now and finish the third when you have its other side.
+This sample contains both sides of two coins and just the front of a third. In two live Codex runs, the organizer saved all five photos separately. After we manually confirmed two pairs, reopening the task showed both pairs and the third coin still missing its back photo. [Download the photos and compare the recorded results](docs/verification.md#five-photo-workbench-check).
 
 ![HeriBase workbench showing two complete front-and-back pairs and a third coin missing its back photo](docs/demo-photo-pairs.webp)
 
-*Workbench demo with sample photos and an English translation of the interface.* [Demo photo credits](docs/demo-credits.md)
+*Workbench illustration of the reviewed state, with English labels.* [Demo photo credits](docs/demo-credits.md)
 
 <details>
 <summary>See what an identification looks like</summary>
@@ -68,7 +72,7 @@ For Claude Code, Gemini CLI, or OpenCode, replace `codex` with `claude-code`, `g
 
 ## Try it with your photos
 
-[Download the five sample photos](docs/coin-photo-sample.zip) · Unzip the folder and use the photo-pairing prompt below. The example starts with five JPEGs, so you can compare your result with the walkthrough.
+[Download the five sample photos](docs/coin-photo-sample.zip) · Unzip the folder and use the photo-pairing prompt below. If the agent leaves photos separate, check them in the workbench. The [recorded run](docs/verification.md#five-photo-workbench-check) includes the reference pairs.
 
 ### Sort a folder of photos in one pass
 
