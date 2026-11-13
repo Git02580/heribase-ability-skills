@@ -3,7 +3,7 @@ name: heribase-cli
 description: Install and initialize HeriBase skills, check runtime dependencies, and guide first use and login. Use the bundled CLI for authentication, image upload, coin identification, collection management, appraisal using existing credits, tracking, Daily Coin, App guides, local tasks, and machine-readable JSON results.
 compatibility: Installed HeriBase CLI; companion heribase-task-package is required for persistent coin workflows.
 metadata:
-  short-description: HeriBase CLI 命令与 JSON 契约
+  short-description: Set up HeriBase and use its CLI
 ---
 
 # HeriBase CLI
