@@ -1,10 +1,10 @@
 # HeriBase Connector
 
-**Mach aus einem Ordner mit Münzfotos eine Sammlung.**
+**Eine Münze anhand von zwei Fotos bestimmen und nach und nach eine Sammlung aufbauen.**
 
-Hast du viele unbenannte Münzfotos oder eine Tabelle mit Bildern? Gib den ganzen Stapel an Codex, Claude Code oder einen anderen kompatiblen KI-Agenten. Mit HeriBase Connector kann er Vorder- und Rückseiten zuordnen, fehlende Fotos markieren, ausgewählte Münzen bestimmen und geprüfte Ergebnisse in deiner HeriBase-Sammlung speichern.
+Gib Codex, Claude Code oder einem anderen kompatiblen Desktop-Agenten je ein Foto von Vorder- und Rückseite. Melde dich bei HeriBase an und bestätige die Fotos. Prüfe den Münzvorschlag im Chat und entscheide, ob du ihn speicherst. Du kannst auch ganze Fotoordner oder Tabellen sortieren und die Arbeit später fortsetzen.
 
-**[Schnellstart](#schnellstart)** · [Ablauf ansehen](#aus-fünf-fotos-werden-drei-münzeinträge) · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md) · [Testergebnisse ansehen (auf Englisch)](verification.md)
+**[Erste Münze bestimmen](#eine-münze-bestimmen-und-dann-speichern)** · **[Schnellstart](#schnellstart)** · [Ablauf ansehen](#aus-fünf-fotos-werden-drei-münzeinträge) · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md) · [Testergebnisse ansehen (auf Englisch)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · **Deutsch** · [Français](README.fr.md)
 
@@ -66,6 +66,14 @@ Ersetze für Claude Code, Gemini CLI oder OpenCode `codex` durch `claude-code`, 
 
 [Installation und Fehlerbehebung (auf Englisch)](../docs/installation.md)
 
+### Eine Münze bestimmen und dann speichern
+
+Prüfe die Fotos, die du zur Bestimmung freigibst. Vergleiche den Vorschlag mit Jahr, Nennwert und weiteren von HeriBase gelieferten Angaben. Danach entscheidest du, ob du die Münze speicherst.
+
+```text
+Bestimme die Münze auf diesen beiden Fotos. Zeig mir das Ergebnis, bevor ich entscheide, ob ich sie in meiner Sammlung speichere.
+```
+
 ## Mit eigenen Fotos ausprobieren
 
 [Fünf Beispielfotos herunterladen](coin-photo-sample.zip) · Entpacke die fünf JPEGs und verwende die folgende Anweisung zum Zuordnen der Fotos. Vergleiche das Ergebnis mit der Vorschau.
@@ -86,14 +94,6 @@ Aus einer Excel-Tabelle mit Bildern oder Bildlinks kann der Agent einen Entwurf 
 
 ```text
 Ordne diese Münztabelle. Behalte Blatt und Zeilennummer bei und markiere Zeilen mit fehlenden oder unlesbaren Bildern.
-```
-
-### Eine Münze bestimmen und dann speichern
-
-Prüfe die Fotos, die du zur Bestimmung freigibst. Vergleiche den Vorschlag mit Jahr, Nennwert und weiteren von HeriBase gelieferten Angaben. Danach entscheidest du, ob du die Münze speicherst.
-
-```text
-Bestimme die Münze auf diesen beiden Fotos. Zeig mir das Ergebnis, bevor ich entscheide, ob ich sie in meiner Sammlung speichere.
 ```
 
 ## Arbeite mit deiner Sammlung weiter

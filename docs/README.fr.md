@@ -1,10 +1,10 @@
 # HeriBase Connector
 
-**Transformez un dossier de photos de pièces en collection.**
+**Identifiez une pièce à partir de deux photos et constituez votre collection au fil du temps.**
 
-Vous avez des photos de pièces sans nom ou un tableur avec des images ? Confiez le lot à Codex, Claude Code ou à un autre agent IA compatible. HeriBase Connector l’aide à associer avers et revers, signaler les photos manquantes, identifier les pièces de votre choix et enregistrer dans HeriBase les résultats que vous avez vérifiés.
+Envoyez une photo de chaque face à Codex, Claude Code ou à un autre agent compatible sur ordinateur. Connectez-vous à HeriBase, validez les photos et vérifiez l’identification proposée dans la conversation avant de choisir de l’enregistrer. Vous pouvez aussi organiser un dossier de photos ou un tableur et reprendre votre travail plus tard.
 
-**[Démarrage rapide](#démarrage-rapide)** · [Voir le déroulement](#de-cinq-photos-à-trois-fiches) · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md) · [Voir les résultats du test (en anglais)](verification.md)
+**[Identifiez votre première pièce](#identifiez-une-pièce-avant-de-lenregistrer)** · **[Démarrage rapide](#démarrage-rapide)** · [Voir le déroulement](#de-cinq-photos-à-trois-fiches) · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md) · [Voir les résultats du test (en anglais)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · **Français**
 
@@ -66,6 +66,14 @@ Pour Claude Code, Gemini CLI ou OpenCode, remplacez `codex` par `claude-code`, `
 
 [Installation et dépannage (en anglais)](../docs/installation.md)
 
+### Identifiez une pièce avant de l’enregistrer
+
+Vérifiez les photos sélectionnées. Comparez la pièce proposée avec l’année, la valeur faciale et les autres données fournies par HeriBase. Vous choisissez ensuite d’ajouter la fiche à votre collection.
+
+```text
+Identifie la pièce sur ces deux photos. Montre-moi le résultat avant que je décide de l’ajouter à ma collection.
+```
+
 ## Essayez avec vos photos
 
 [Télécharger les cinq photos d’exemple](coin-photo-sample.zip) · Décompressez les cinq JPEG et utilisez la demande d’association ci-dessous. Vous pourrez comparer le résultat avec la démonstration.
@@ -86,14 +94,6 @@ Avec un tableur qui contient des images ou des liens, l’agent prépare une fic
 
 ```text
 Organise ce tableur. Conserve la feuille et le numéro de ligne, et indique quelles photos sont manquantes ou illisibles.
-```
-
-### Identifiez une pièce avant de l’enregistrer
-
-Vérifiez les photos sélectionnées. Comparez la pièce proposée avec l’année, la valeur faciale et les autres données fournies par HeriBase. Vous choisissez ensuite d’ajouter la fiche à votre collection.
-
-```text
-Identifie la pièce sur ces deux photos. Montre-moi le résultat avant que je décide de l’ajouter à ma collection.
 ```
 
 ## Continuez à gérer votre collection

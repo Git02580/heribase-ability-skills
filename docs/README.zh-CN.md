@@ -1,10 +1,10 @@
 # HeriBase Connector
 
-**把一文件夹的钱币照片，整理成可继续维护的收藏。**
+**用正反两张照片识别一枚钱币，逐步建立自己的收藏。**
 
-相册里堆着没命名的钱币照片，或已经用表格记录了一批藏品？把整批资料交给 Codex、Claude Code 或其他兼容的 AI 助手。HeriBase Connector 会帮助手配对正反面、标出缺图，识别你选中的钱币，再把核对过的结果存进 HeriBase 收藏。
+把钱币正反面的照片发给 Codex、Claude Code 或其他兼容的桌面助手。登录 HeriBase、确认要提交的照片后，在聊天里核对识别结果，再决定是否收藏。也可以整理整批照片或表格，下次接着做。
 
-**[快速开始](#快速开始)** · [查看工作流程](#5-张照片整理出-3-枚钱币) · [HeriBase 官网](https://www.heribase.com/zh-CN/) · [更新记录（英文）](../CHANGELOG.md) · [查看实测记录（英文）](verification.md)
+**[识别第一枚钱币](#识别一枚再决定是否收藏)** · **[快速开始](#快速开始)** · [查看工作流程](#5-张照片整理出-3-枚钱币) · [HeriBase 官网](https://www.heribase.com/zh-CN/) · [更新记录（英文）](../CHANGELOG.md) · [查看实测记录（英文）](verification.md)
 
 [English](../README.md) · **简体中文** · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
@@ -66,6 +66,14 @@ py -3 "<skills-dir>\heribase-cli\scripts\setup.py" --init
 
 [安装与排障](../skills/heribase-cli/references/installation.md)
 
+### 识别一枚，再决定是否收藏
+
+发清晰的正反面照片，先核对要提交的图片。拿到建议币种后，对照年份、面额，以及服务实际返回的造币标记或参考价。核对好了再存进收藏。
+
+```text
+用这两张照片识别这枚钱币。先给我看结果和要核对的字段，我看完再决定是否收藏。
+```
+
 ## 用自己的照片试一试
 
 [下载 5 张示例照片](coin-photo-sample.zip) · 解压后，把 5 张 JPEG 交给助手，用下方的配对指令试一次，再对照页面里的演示结果。
@@ -86,14 +94,6 @@ py -3 "<skills-dir>\heribase-cli\scripts\setup.py" --init
 
 ```text
 整理这张收藏表。每条记录保留原工作表和行号，先列出缺图或读不到图片的行。
-```
-
-### 识别一枚，再决定是否收藏
-
-发清晰的正反面照片，先核对要提交的图片。拿到建议币种后，对照年份、面额，以及服务实际返回的造币标记或参考价。核对好了再存进收藏。
-
-```text
-用这两张照片识别这枚钱币。先给我看结果和要核对的字段，我看完再决定是否收藏。
 ```
 
 ## 收藏后还可以做什么

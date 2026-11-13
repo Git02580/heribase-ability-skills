@@ -1,10 +1,10 @@
 # HeriBase Connector
 
-**Transforme uma pasta de fotos de moedas em uma coleção.**
+**Identifique uma moeda com duas fotos e monte sua coleção aos poucos.**
 
-Tem fotos de moedas sem nome ou uma planilha com imagens? Envie o lote inteiro ao Codex, ao Claude Code ou a outro agente de IA compatível. O HeriBase Connector ajuda a combinar anversos e reversos, sinalizar fotos ausentes, identificar as moedas que você escolher e salvar no HeriBase os resultados aprovados.
+Envie uma foto de cada lado ao Codex, ao Claude Code ou a outro agente de desktop compatível. Entre no HeriBase, confirme as fotos e revise a identificação sugerida no chat antes de decidir se quer salvá-la. Você também pode organizar pastas de fotos ou uma planilha e retomar o trabalho mais tarde.
 
-**[Início rápido](#início-rápido)** · [Veja como funciona](#de-cinco-fotos-a-três-registros-de-moedas) · [Site oficial do HeriBase](https://www.heribase.com/pt-BR/) · [Novidades (em inglês)](../CHANGELOG.md) · [Veja os resultados do teste (em inglês)](verification.md)
+**[Identifique sua primeira moeda](#identifique-uma-moeda-antes-de-salvar)** · **[Início rápido](#início-rápido)** · [Veja como funciona](#de-cinco-fotos-a-três-registros-de-moedas) · [Site oficial do HeriBase](https://www.heribase.com/pt-BR/) · [Novidades (em inglês)](../CHANGELOG.md) · [Veja os resultados do teste (em inglês)](verification.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Português (Brasil)** · [Deutsch](README.de.md) · [Français](README.fr.md)
 
@@ -66,6 +66,14 @@ Para o Claude Code, o Gemini CLI ou o OpenCode, troque `codex` por `claude-code`
 
 [Instalação e solução de problemas (em inglês)](../docs/installation.md)
 
+### Identifique uma moeda antes de salvar
+
+Confira as fotos que serão enviadas. Compare a sugestão do HeriBase com o ano, o valor facial e os demais dados disponíveis, então decida se quer salvar a moeda.
+
+```text
+Identifique a moeda destas duas fotos. Mostre o resultado antes de eu decidir se quero adicioná-la à coleção.
+```
+
 ## Experimente com suas fotos
 
 [Baixe as cinco fotos de exemplo](coin-photo-sample.zip) · Extraia o arquivo e envie os cinco JPEGs com o pedido de pareamento abaixo. Compare o resultado com o exemplo da página.
@@ -86,14 +94,6 @@ Uma planilha do Excel com fotos ou links pode virar uma ficha por linha, preserv
 
 ```text
 Organize esta planilha de moedas. Preserve a aba e a linha de origem e mostre onde faltam fotos ou onde não foi possível abri-las.
-```
-
-### Identifique uma moeda antes de salvar
-
-Confira as fotos que serão enviadas. Compare a sugestão do HeriBase com o ano, o valor facial e os demais dados disponíveis, então decida se quer salvar a moeda.
-
-```text
-Identifique a moeda destas duas fotos. Mostre o resultado antes de eu decidir se quero adicioná-la à coleção.
 ```
 
 ## Continue cuidando da sua coleção

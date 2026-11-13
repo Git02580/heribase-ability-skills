@@ -44,7 +44,7 @@ For later Python commands, use the interpreter path returned by initialization. 
 
 ## 3. Start in chat or open the workbench
 
-Try: “Pair the front and back photos in this folder and show me the uncertain pairs.” For a single coin, send both sides and ask your agent to identify it. Review the photos before identification and the result before saving to your collection.
+For your first coin, attach a clear photo of each side and ask your agent to identify it with HeriBase. Sign in when asked and review the photos before submitting them. Check the result before deciding whether to save it to your collection. To start with a folder, ask your agent to pair the photos and show you the uncertain pairs.
 
 Ask your agent to open the local workbench if you want to review the photos in a browser. Automatic sorting after upload in the workbench requires a signed-in [Codex CLI](https://developers.openai.com/codex/cli/). This is separate from your HeriBase sign-in. You can still start in chat with another compatible agent.
 
