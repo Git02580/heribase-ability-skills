@@ -18,13 +18,15 @@ Use the same photos to compare what the organizer saves before and after review,
 
 [Run 1: automatic result](sample-automatic-run.json) · [Run 2: automatic result and saved review](sample-review-run.json) · [Museum photo sources](demo-credits.md)
 
-The records include the Connector commit, tool version, and SHA-256 hashes for the download and each photo. The coin names are reference labels from the photo sources. The run used Codex for image grouping. It stopped before HeriBase online identification or saving to an online collection.
+The records include the Connector commit, tool version, and SHA-256 hashes for the download and each photo. We exercised the same upload, organization, and photo editing operations used by the workbench, then reopened the task in a fresh workbench service. The coin names are reference labels from the photo sources. The check used Codex for image grouping and stopped before HeriBase online identification or saving to an online collection.
 
 ## Clean installation check
 
 On November 13, 2026, we used two fresh macOS user directories with Node.js 24 and Python 3.12. One installed from the current GitHub address and the other from the previous address. Both copied all six Skills, returned `ok: true` from the README initialization command, and supplied the full instructions for all six to a fresh Codex session. No HeriBase account was signed in.
 
 [Clean-install report](clean-install-run.json) · [Installation and troubleshooting](installation.md)
+
+GitHub Actions also installs and initializes the Skills on Ubuntu and checks setup, pairing, and collection safeguards with local fixtures. [First passing GitHub run](https://github.com/HeriBase/heribase-ability-skills/actions/runs/43378725264) · [Latest check status](https://github.com/HeriBase/heribase-ability-skills/actions/workflows/connector-checks.yml)
 
 ## Who publishes HeriBase
 
