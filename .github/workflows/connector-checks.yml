@@ -1,0 +1,64 @@
+name: Connector checks
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/**', '.github/workflows/connector-checks.yml']
+  pull_request:
+    paths: ['skills/**', '.github/workflows/connector-checks.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installation:
+    name: Install and verify local workflows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      DISABLE_TELEMETRY: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install all six Skills from this checkout
+        run: npx --yes skills@1.8.1 add "$GITHUB_WORKSPACE" --skill '*' --agent codex --global --copy --yes
+      - name: Initialize without signing in to HeriBase
+        shell: bash
+        run: |
+          skill_dir="$HOME/.agents/skills"
+          trap 'node "$skill_dir/heribase-cli/bin/heribase" daemon stop --json >/dev/null 2>&1 || true' EXIT
+          python3 "$skill_dir/heribase-cli/scripts/setup.py" --init > "$RUNNER_TEMP/heribase-init.json"
+          python3 - "$skill_dir" "$RUNNER_TEMP/heribase-init.json" <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+
+          names = {
+              "heribase-appraisal", "heribase-cli", "heribase-collection",
+              "heribase-task-package", "heribase-tracking", "heribase-workspace",
+          }
+          root = Path(sys.argv[1])
+          assert {path.parent.name for path in root.glob("heribase-*/SKILL.md")} == names
+          assert all(not (root / name).is_symlink() for name in names)
+          report = json.loads(Path(sys.argv[2]).read_text())
+          assert report["ok"] and report["initialization"]["ok"]
+          assert report["initialization"]["authenticated"] is False
+          print("Initialized all six copied Skills without a HeriBase login.")
+          PY
+      - name: Verify setup, pairing, and collection safeguards
+        shell: bash
+        run: |
+          python_bin="$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["python"])' "$RUNNER_TEMP/heribase-init.json")"
+          "$python_bin" -m unittest discover -s skills/heribase-cli/tests
+          "$python_bin" -m unittest discover -s skills/heribase-workspace/tests -p 'test_organizer*.py'
+          "$python_bin" -m unittest discover -s skills/heribase-workspace/tests -p 'test_connector*.py'
