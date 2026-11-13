@@ -1,14 +1,31 @@
 # HeriBase Connector
 
-<a href="https://www.heribase.com/fr/"><img src="heribase-icon.png" alt="HeriBase" width="64" height="64"></a>
+**Transformez un dossier de photos de pièces en collection.**
 
-**Agent Skills pour les collectionneurs de monnaies**
+Vous avez des photos de pièces sans nom ou un tableur avec des images ? Confiez le lot à Codex, Claude Code ou à un autre agent IA compatible. HeriBase Connector l’aide à associer avers et revers, signaler les photos manquantes, identifier les pièces de votre choix et enregistrer dans HeriBase les résultats que vous avez vérifiés.
 
-Envoyez des photos de vos pièces à votre agent IA. Il peut trier et associer les images, identifier les pièces avec HeriBase et vous aider à ajouter à votre collection les résultats que vous avez vérifiés.
-
-[Site officiel de HeriBase](https://www.heribase.com/fr/) · [Installation et dépannage (en anglais)](installation.md)
+**[Démarrage rapide](#démarrage-rapide)** · [Site officiel de HeriBase](https://www.heribase.com/fr/) · [Nouveautés (en anglais)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · **Français**
+
+## De cinq photos à trois fiches
+
+Imaginez un dossier avec les deux faces de deux pièces et seulement l’avers d’une troisième. L’agent rassemble les deux paires complètes et vous signale le revers manquant. Vous pouvez faire identifier les deux premières pièces, puis reprendre la troisième après avoir ajouté sa photo.
+
+![Espace HeriBase avec deux paires complètes et une troisième pièce dont la photo du revers manque](demo-photo-pairs.webp)
+
+*Démonstration avec des photos d’exemple et une interface traduite en anglais.* [Crédits photo](demo-credits.md)
+
+<details>
+<summary>Voir un exemple d’identification</summary>
+
+Après validation des photos, l’espace de travail affiche la pièce proposée et les données fournies par HeriBase. Comparez l’année et la valeur faciale avec vos photos, puis décidez si vous souhaitez enregistrer la fiche.
+
+![Fiche d’exemple d’un cent Indian Head de 1860, avec les deux faces et le bouton d’ajout à la collection](demo-identification.webp)
+
+*Les données d’identification de cette fiche sont fournies à titre d’exemple.*
+
+</details>
 
 ## Démarrage rapide
 
@@ -47,18 +64,17 @@ Pour Claude Code, Gemini CLI ou OpenCode, remplacez `codex` par `claude-code`, `
 
 </details>
 
-## Essayez avec votre première pièce
+[Installation et dépannage (en anglais)](../docs/installation.md)
 
-1. **Envoyez des photos de l’avers et du revers.** Si vous avez plusieurs pièces, demandez à l’agent d’associer les photos et de vous signaler les paires incertaines.
-2. **Confirmez l’identification.** Vérifiez les photos sélectionnées avant que l’agent ne les transmette à HeriBase pour identification.
-3. **Vérifiez et enregistrez.** Vérifiez la pièce proposée et ses caractéristiques, puis demandez à l’agent de l’ajouter à votre collection HeriBase si le résultat vous convient.
+## Essayez avec vos photos
 
-## Ce que vous pouvez demander
+> Trie les photos de pièces de ce dossier. Associe les avers et les revers, signale les photos manquantes et les paires incertaines, et attends ma vérification avant de lancer l’identification.
 
-- “Associe les photos de l’avers et du revers dans ce dossier. Montre-moi les paires dont tu n’es pas sûr.”
-- “Identifie cette pièce. Je veux vérifier le résultat avant de l’ajouter à ma collection.”
-- “Vérifie l’avancement de mon expertise.”
-- “Montre-moi les derniers prix disponibles pour les pièces que je suis.”
+## Continuez à gérer votre collection
+
+- **Reprenez un lot en cours.** Retrouvez les photos d’origine, les paires validées et l’avancement de la vérification.
+- **Suivez le prix de vos pièces.** Demandez les derniers prix disponibles pour les pièces que vous suivez dans HeriBase.
+- **Suivez une expertise.** Consultez l’état de l’expertise et ouvrez le rapport dès qu’il est prêt.
 
 ## Avant de commencer
 

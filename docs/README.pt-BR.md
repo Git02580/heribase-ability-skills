@@ -1,14 +1,31 @@
 # HeriBase Connector
 
-<a href="https://www.heribase.com/pt-BR/"><img src="heribase-icon.png" alt="HeriBase" width="64" height="64"></a>
+**Transforme uma pasta de fotos de moedas em uma coleção.**
 
-**Agent Skills para colecionadores de moedas**
+Tem fotos de moedas sem nome ou uma planilha com imagens? Envie o lote inteiro ao Codex, ao Claude Code ou a outro agente de IA compatível. O HeriBase Connector ajuda a combinar anversos e reversos, sinalizar fotos ausentes, identificar as moedas que você escolher e salvar no HeriBase os resultados aprovados.
 
-Envie fotos de moedas ao seu agente de IA. Ele pode organizar e parear as imagens, identificar as moedas com o HeriBase e ajudar a salvar na sua coleção os resultados que você revisar.
-
-[Site oficial do HeriBase](https://www.heribase.com/pt-BR/) · [Instalação e solução de problemas (em inglês)](installation.md)
+**[Início rápido](#início-rápido)** · [Site oficial do HeriBase](https://www.heribase.com/pt-BR/) · [Novidades (em inglês)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Português (Brasil)** · [Deutsch](README.de.md) · [Français](README.fr.md)
+
+## De cinco fotos a três registros de moedas
+
+Imagine uma pasta com os dois lados de duas moedas e só o anverso de uma terceira. O agente reúne os dois pares completos e indica qual reverso está faltando. Você já pode identificar as duas primeiras e continuar com a terceira quando tiver a outra foto.
+
+![Espaço de trabalho do HeriBase com dois pares completos e uma terceira moeda sem foto do reverso](demo-photo-pairs.webp)
+
+*Demonstração com fotos de exemplo e interface traduzida para o inglês.* [Créditos das fotos](demo-credits.md)
+
+<details>
+<summary>Veja como aparece uma identificação</summary>
+
+Depois de confirmar quais fotos serão usadas, você vê a moeda sugerida e os dados retornados pelo HeriBase. Confira o ano e o valor facial nas suas fotos e decida se quer salvar o registro.
+
+![Registro de exemplo de um centavo Indian Head de 1860, com fotos dos dois lados e a opção de salvar na coleção](demo-identification.webp)
+
+*Os dados de identificação do cartão são ilustrativos.*
+
+</details>
 
 ## Início rápido
 
@@ -47,18 +64,17 @@ Para o Claude Code, o Gemini CLI ou o OpenCode, troque `codex` por `claude-code`
 
 </details>
 
-## Experimente com sua primeira moeda
+[Instalação e solução de problemas (em inglês)](../docs/installation.md)
 
-1. **Envie fotos do anverso e do reverso.** Se tiver várias fotos, peça ao agente para formar os pares e mostrar aqueles sobre os quais houver dúvida.
-2. **Confirme a identificação.** Confira as fotos selecionadas antes que o agente as envie ao HeriBase para identificar as moedas.
-3. **Revise e salve.** Confira a moeda sugerida e seus dados. Se estiver tudo certo, peça ao agente para adicioná-la à sua coleção no HeriBase.
+## Experimente com suas fotos
 
-## O que você pode pedir
+> Organize as fotos de moedas desta pasta. Combine anversos e reversos, mostre as fotos que faltam e os pares duvidosos, e espere minha revisão antes de identificar as moedas.
 
-- “Combine as fotos do anverso e do reverso nesta pasta. Mostre os pares sobre os quais você tiver dúvida.”
-- “Identifique esta moeda. Quero conferir o resultado antes de adicioná-la à coleção.”
-- “Consulte o andamento da minha avaliação por um especialista.”
-- “Mostre os preços mais recentes disponíveis para as moedas que acompanho.”
+## Continue cuidando da sua coleção
+
+- **Retome um lote.** Volte às fotos originais, às decisões sobre os pares e ao ponto em que parou a revisão.
+- **Acompanhe os preços das suas moedas.** Peça os preços mais recentes disponíveis para as moedas que acompanha no HeriBase.
+- **Consulte uma avaliação.** Veja o andamento de uma avaliação por especialista e abra o laudo quando estiver pronto.
 
 ## Antes de começar
 

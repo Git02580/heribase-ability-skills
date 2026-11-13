@@ -1,14 +1,31 @@
 # HeriBase Connector
 
-<a href="https://www.heribase.com/de/"><img src="heribase-icon.png" alt="HeriBase" width="64" height="64"></a>
+**Mach aus einem Ordner mit Münzfotos eine Sammlung.**
 
-**Agent Skills für Münzsammler**
+Hast du viele unbenannte Münzfotos oder eine Tabelle mit Bildern? Gib den ganzen Stapel an Codex, Claude Code oder einen anderen kompatiblen KI-Agenten. Mit HeriBase Connector kann er Vorder- und Rückseiten zuordnen, fehlende Fotos markieren, ausgewählte Münzen bestimmen und geprüfte Ergebnisse in deiner HeriBase-Sammlung speichern.
 
-Schicke deinem KI-Agenten Fotos deiner Münzen. Er kann die Aufnahmen sortieren, Vorder- und Rückseiten zuordnen, Münzen mit HeriBase bestimmen und dir helfen, geprüfte Ergebnisse in deiner Sammlung zu speichern.
-
-[Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Installation und Fehlerbehebung (auf Englisch)](installation.md)
+**[Schnellstart](#schnellstart)** · [Offizielle HeriBase-Website](https://www.heribase.com/de/) · [Änderungen (auf Englisch)](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-HK.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · **Deutsch** · [Français](README.fr.md)
+
+## Aus fünf Fotos werden drei Münzeinträge
+
+In einem Ordner liegen Vorder- und Rückseiten von zwei Münzen und nur die Vorderseite einer dritten. Der Agent gruppiert die beiden vollständigen Paare und zeigt dir, welche Rückseite fehlt. Bestimme die ersten beiden Münzen gleich und ergänze die dritte später.
+
+![HeriBase-Arbeitsbereich mit zwei vollständigen Fotopaaren und einer dritten Münze ohne Rückseitenfoto](demo-photo-pairs.webp)
+
+*Demo mit Beispielfotos und englisch übersetzter Benutzeroberfläche.* [Bildnachweise](demo-credits.md)
+
+<details>
+<summary>So sieht ein Bestimmungsergebnis aus</summary>
+
+Sobald du die Fotos zur Bestimmung freigibst, siehst du den Münzvorschlag und die von HeriBase gelieferten Angaben. Prüfe Jahr und Nennwert anhand deiner Fotos und entscheide dann, ob du den Eintrag speicherst.
+
+![Beispiel für einen Indian-Head-Cent von 1860 mit Fotos beider Seiten und Schaltfläche zum Speichern](demo-identification.webp)
+
+*Die Angaben zur Bestimmung sind Beispieldaten.*
+
+</details>
 
 ## Schnellstart
 
@@ -47,18 +64,17 @@ Ersetze für Claude Code, Gemini CLI oder OpenCode `codex` durch `claude-code`, 
 
 </details>
 
-## Mit der ersten Münze loslegen
+[Installation und Fehlerbehebung (auf Englisch)](../docs/installation.md)
 
-1. **Sende Fotos der Vorder- und Rückseite.** Bei mehreren Münzen kannst du den Agenten bitten, passende Fotos zuzuordnen und unsichere Paare zu zeigen.
-2. **Bestätige die Bestimmung.** Prüfe die ausgewählten Fotos, bevor der Agent sie zur Bestimmung an HeriBase sendet.
-3. **Prüfe und speichere das Ergebnis.** Vergleiche den Münzvorschlag und die Details mit deinem Stück. Bitte dann den Agenten, es bei Bedarf zur HeriBase-Sammlung hinzuzufügen.
+## Mit eigenen Fotos ausprobieren
 
-## Das kannst du deinen Agenten fragen
+> Ordne die Münzfotos in diesem Ordner nach Vorder- und Rückseiten zu. Zeig mir fehlende Fotos und unsichere Paare. Warte mit der Bestimmung, bis ich die Paare geprüft habe.
 
-- “Ordne die Fotos in diesem Ordner nach Vorder- und Rückseite zu. Zeig mir die unsicheren Paare.”
-- “Bestimme diese Münze. Ich möchte das Ergebnis prüfen, bevor sie in meine Sammlung kommt.”
-- “Prüfe den Stand meiner Expertenbegutachtung.”
-- “Zeig mir die neuesten verfügbaren Preise für die Münzen, die ich beobachte.”
+## Arbeite mit deiner Sammlung weiter
+
+- **Setze einen Stapel fort.** Greif auf die Originalfotos, bestätigten Paare und den bisherigen Prüfstand zu.
+- **Verfolge die Preise deiner Münzen.** Frag nach den neuesten verfügbaren Preisen für die Münzen, die du in HeriBase beobachtest.
+- **Prüfe den Stand einer Begutachtung.** Sieh nach, wie weit die Prüfung ist, und öffne den Bericht, sobald er vorliegt.
 
 ## Vor dem Start
 

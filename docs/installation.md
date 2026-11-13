@@ -1,6 +1,6 @@
 # Install and troubleshoot HeriBase Connector
 
-[Quick start](../README.md) · [简体中文安装说明](../skills/heribase-cli/references/installation.md) · [HeriBase website](https://www.heribase.com/)
+[Quick start](../README.md#quick-start) · [Simplified Chinese installation guide](../skills/heribase-cli/references/installation.md) · [HeriBase website](https://www.heribase.com/)
 
 ## 1. Install all six Skills
 

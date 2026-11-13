@@ -1,14 +1,31 @@
 # HeriBase Connector
 
-<a href="https://www.heribase.com/zh-HK/"><img src="heribase-icon.png" alt="HeriBase" width="64" height="64"></a>
+**將一個資料夾的錢幣相片，整理成可繼續管理的收藏。**
 
-**為錢幣收藏者而設的 Agent Skills**
+相簿裏有一堆未命名的錢幣相片，或已有一份附圖的試算表？把整批資料交給 Codex、Claude Code 或其他相容的 AI 助手。HeriBase Connector 可協助配對正反面、標示欠缺的相片、辨識你選定的錢幣，並把你核對過的結果加入 HeriBase 收藏。
 
-把錢幣相片傳給 AI 助手，它可以幫你整理和配對正反面、用 HeriBase 辨識錢幣，再將你核對過的結果加入收藏。
-
-[HeriBase 官方網站](https://www.heribase.com/zh-HK/) · [安裝及疑難排解（英文）](installation.md)
+**[快速上手](#快速上手)** · [HeriBase 官方網站](https://www.heribase.com/zh-HK/) · [更新記錄（英文）](../CHANGELOG.md)
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
+
+## 5 張相片，整理成 3 枚錢幣的記錄
+
+假設資料夾裏有兩枚錢幣的正反面，第三枚只有正面。助手會整理出兩組完整相片，並提示第三枚欠缺反面。你可先辨識相片齊全的兩枚，稍後補圖再繼續。
+
+![HeriBase 工作台顯示兩組齊全的正反面相片，以及一枚欠缺反面的錢幣](demo-photo-pairs.webp)
+
+*工作台示範使用公開範例相片，畫面以英文呈現。* [示範相片來源](demo-credits.md)
+
+<details>
+<summary>看看辨識結果</summary>
+
+確認要辨識的相片後，工作台會顯示建議的幣種和 HeriBase 回傳的資料。對照相片核對年份和面額，再決定是否加入收藏。
+
+![1860 年印第安頭像一美仙的範例辨識卡，包含兩面相片及收藏按鈕](demo-identification.webp)
+
+*卡片上的辨識資料為示範用途。*
+
+</details>
 
 ## 快速上手
 
@@ -47,18 +64,17 @@ py -3 "<skills-dir>\heribase-cli\scripts\setup.py" --init
 
 </details>
 
-## 試試辨識第一枚錢幣
+[安裝及疑難排解（英文）](../docs/installation.md)
 
-1. **傳送正反面相片。** 如有一批相片，可請助手配對，並列出不確定的配對。
-2. **確認辨識。** 先核對要辨識的相片；你確認後，助手才會將相片提交至 HeriBase。
-3. **核對後收藏。** 查看建議的幣種及資料，再決定是否加入 HeriBase 收藏。
+## 用自己的相片試試
 
-## 你可以這樣說
+> 幫我整理這個資料夾的錢幣相片，配對正反面，並列出欠缺或不確定的相片。等我核對後才開始辨識。
 
-- “幫我配對這個資料夾內的錢幣正反面相片，並列出不確定的配對。”
-- “辨識這枚錢幣，等我核對結果後才加入收藏。”
-- “查看我的專家鑑定進度。”
-- “看看我追蹤的錢幣有甚麼最新行情。”
+## 繼續管理你的收藏
+
+- **接續上次的整理.** 下次可回到同一批資料，找回原始相片、配對決定及核對進度。
+- **查看收藏行情.** 查看你在 HeriBase 追蹤的錢幣的最新可用價格。
+- **跟進專家鑑定.** 查詢鑑定進度，並在報告完成後查看。
 
 ## 使用前須知
 
