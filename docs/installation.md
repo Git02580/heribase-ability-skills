@@ -13,7 +13,7 @@ Use a desktop AI agent that supports Agent Skills and can run local commands. Yo
 For a user-wide Codex installation, run:
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 For Claude Code, Gemini CLI, or OpenCode, substitute `claude-code`, `gemini-cli`, or `opencode` for `codex`. Omit `--global` for a project-only install. Use the actual destination shown by the installer.
@@ -61,4 +61,4 @@ Your local tasks and HeriBase sign-in settings are stored under `.heribase` in y
 | The workbench does not automatically sort photos | Check that Codex CLI is installed and signed in. |
 | HeriBase says I am not signed in | Ask the agent to start HeriBase sign-in again; complete it in the browser. |
 
-For a read-only environment check, replace `--init` with `--check`. When [reporting an issue](https://github.com/Git02580/heribase-ability-skills/issues), include your operating system, agent, and the error with private information removed.
+For a read-only environment check, replace `--init` with `--check`. When [reporting an issue](https://github.com/HeriBase/heribase-ability-skills/issues), include your operating system, agent, and the error with private information removed.

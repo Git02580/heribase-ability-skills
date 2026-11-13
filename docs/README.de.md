@@ -15,7 +15,7 @@ Schicke deinem KI-Agenten Fotos deiner Münzen. Er kann die Aufnahmen sortieren,
 Sende diese Nachricht an Codex, Claude Code oder einen anderen Desktop-Agenten, der Skills unterstützt und lokale Befehle ausführen kann:
 
 ```text
-Installiere alle sechs HeriBase Skills von https://github.com/Git02580/heribase-ability-skills.
+Installiere alle sechs HeriBase Skills von https://github.com/HeriBase/heribase-ability-skills.
 Folge der README: Kopiere die Skills in das Skills-Verzeichnis meines Agenten und führe setup.py --init aus.
 Sag mir, wenn alles bereit ist, und zeig mir, wie ich anfange. Falls eine Anmeldung bei HeriBase nötig ist, möchte ich sie im Browser selbst abschließen.
 ```
@@ -26,7 +26,7 @@ Sag mir, wenn alles bereit ist, und zeig mir, wie ich anfange. Falls eine Anmeld
 Du brauchst Node.js ab Version 24, Python ab Version 3.9 (empfohlen: 3.12) und Git. Dieses Beispiel installiert das komplette Paket für Codex:
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 Verwende für die Einrichtung das vom Installer angezeigte Skills-Verzeichnis. Ersetze in den Befehlen unten `<skills-dir>` durch diesen Pfad.
@@ -82,4 +82,4 @@ Installiere alle sechs Skills zusammen. Sie nutzen denselben lokalen Arbeitsbere
 
 ## Hilfe
 
-[Ein Problem melden](https://github.com/Git02580/heribase-ability-skills/issues). Bitte füge keine Kontodaten, Zugangsdaten oder privaten Münzfotos bei.
+[Ein Problem melden](https://github.com/HeriBase/heribase-ability-skills/issues). Bitte füge keine Kontodaten, Zugangsdaten oder privaten Münzfotos bei.

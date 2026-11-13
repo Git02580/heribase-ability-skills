@@ -15,7 +15,7 @@ Envoyez des photos de vos pièces à votre agent IA. Il peut trier et associer l
 Copiez ce message dans Codex, Claude Code ou un autre agent de bureau capable de charger des Skills et d’exécuter des commandes locales :
 
 ```text
-Installe les six HeriBase Skills depuis https://github.com/Git02580/heribase-ability-skills.
+Installe les six HeriBase Skills depuis https://github.com/HeriBase/heribase-ability-skills.
 Suis le README : copie les Skills dans le dossier de mon agent, puis exécute setup.py --init.
 Indique-moi quand tout est prêt et comment commencer. Si je dois me connecter à HeriBase, laisse-moi le faire dans le navigateur.
 ```
@@ -26,7 +26,7 @@ Indique-moi quand tout est prêt et comment commencer. Si je dois me connecter �
 Il vous faut Node.js 24 ou plus, Python 3.9 ou plus (3.12 recommandé) et Git. Cet exemple installe les six Skills pour Codex :
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 Utilisez le dossier de Skills indiqué par l’installateur. Dans les commandes ci-dessous, remplacez `<skills-dir>` par le chemin de ce dossier.
@@ -82,4 +82,4 @@ Installez les six Skills ensemble : elles partagent le même espace de travail l
 
 ## Aide
 
-[Signaler un problème](https://github.com/Git02580/heribase-ability-skills/issues). N’ajoutez pas de données de compte, d’identifiants ni de photos privées.
+[Signaler un problème](https://github.com/HeriBase/heribase-ability-skills/issues). N’ajoutez pas de données de compte, d’identifiants ni de photos privées.

@@ -15,7 +15,7 @@
 Codex、Claude Code など、Skills に対応し、ローカルでコマンドを実行できるデスクトップの AI エージェントに、次の指示を送ってください。
 
 ```text
-https://github.com/Git02580/heribase-ability-skills にある HeriBase Skills を6つすべてインストールしてください。
+https://github.com/HeriBase/heribase-ability-skills にある HeriBase Skills を6つすべてインストールしてください。
 README に従って、使っているエージェントの Skills ディレクトリにコピーし、setup.py --init を実行してください。
 準備ができたら使い方を教えてください。HeriBase へのログインが必要なら、ブラウザーで自分で行います。
 ```
@@ -26,7 +26,7 @@ README に従って、使っているエージェントの Skills ディレク�
 Node.js 24 以上、Python 3.9 以上（3.12 推奨）、Git が必要です。次は Codex に一式をインストールする例です。
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 インストーラーに表示された Skills ディレクトリを使って初期化します。以下の `<skills-dir>` を実際のパスに置き換えてください。
@@ -82,4 +82,4 @@ Claude Code、Gemini CLI、OpenCode の場合は、`codex` をそれぞれ `clau
 
 ## サポート
 
-[問題を報告する](https://github.com/Git02580/heribase-ability-skills/issues). アカウント情報、認証情報、非公開のコイン写真は添付しないでください。
+[問題を報告する](https://github.com/HeriBase/heribase-ability-skills/issues). アカウント情報、認証情報、非公開のコイン写真は添付しないでください。

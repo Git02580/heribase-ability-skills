@@ -15,7 +15,7 @@
 把以下指示傳給 Codex、Claude Code，或其他支援 Skills 且能執行本機指令的桌面 Agent：
 
 ```text
-請從 https://github.com/Git02580/heribase-ability-skills 安裝全部六個 HeriBase Skills。
+請從 https://github.com/HeriBase/heribase-ability-skills 安裝全部六個 HeriBase Skills。
 依照 README，將整套技能複製到目前 Agent 的 Skills 目錄，再執行 setup.py --init 完成初始化。
 準備好後請告訴我如何開始。如需登入 HeriBase，請讓我在瀏覽器完成。
 ```
@@ -26,7 +26,7 @@
 需要 Node.js 24+、Python 3.9+（建議 3.12）和 Git。以下是為 Codex 安裝整套技能的例子：
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 使用安裝程式顯示的 Skills 目錄進行初始化。把指令中的 `<skills-dir>` 換成該路徑。
@@ -82,4 +82,4 @@ py -3 "<skills-dir>\heribase-cli\scripts\setup.py" --init
 
 ## 取得協助
 
-[回報問題](https://github.com/Git02580/heribase-ability-skills/issues). 請勿附上帳戶資料、憑證或私人收藏相片。
+[回報問題](https://github.com/HeriBase/heribase-ability-skills/issues). 請勿附上帳戶資料、憑證或私人收藏相片。

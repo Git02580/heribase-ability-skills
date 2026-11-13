@@ -15,7 +15,7 @@ Envía fotos de tus monedas a tu agente de IA. Puede ordenar y emparejar las im�
 Copia este mensaje en Codex, Claude Code u otro agente de escritorio compatible con Skills y capaz de ejecutar comandos locales:
 
 ```text
-Instala las seis HeriBase Skills desde https://github.com/Git02580/heribase-ability-skills.
+Instala las seis HeriBase Skills desde https://github.com/HeriBase/heribase-ability-skills.
 Sigue el README: copia todas las Skills al directorio de Skills de mi agente y ejecuta setup.py --init.
 Dime cómo empezar cuando todo esté listo. Si necesito iniciar sesión en HeriBase, deja que lo haga en el navegador.
 ```
@@ -26,7 +26,7 @@ Dime cómo empezar cuando todo esté listo. Si necesito iniciar sesión en HeriB
 Necesitas Node.js 24 o posterior, Python 3.9 o posterior (se recomienda 3.12) y Git. Este ejemplo instala el conjunto completo para Codex:
 
 ```sh
-npx skills add Git02580/heribase-ability-skills --skill '*' --agent codex --global --copy
+npx skills add HeriBase/heribase-ability-skills --skill '*' --agent codex --global --copy
 ```
 
 Usa el directorio de Skills que indica el instalador. Sustituye `<skills-dir>` en los siguientes comandos por esa ruta.
@@ -82,4 +82,4 @@ Instala las seis Skills juntas: comparten el mismo espacio de trabajo local.
 
 ## Ayuda
 
-[Notificar un problema](https://github.com/Git02580/heribase-ability-skills/issues). No incluyas datos de tu cuenta, credenciales ni fotos privadas.
+[Notificar un problema](https://github.com/HeriBase/heribase-ability-skills/issues). No incluyas datos de tu cuenta, credenciales ni fotos privadas.
