@@ -1,9 +1,9 @@
 ---
 name: heribase-appraisal
-description: 在 HeriBase 准备或恢复真人钱币鉴定材料，选择官方服务或专家、购买或核对次数、确认提交，并查询进度与真实鉴定报告。
-compatibility: 同级 heribase-workspace、heribase-task-package、heribase-cli；Python 3.9+ 和 Node.js 24+。
+description: Prepare or resume a HeriBase expert coin appraisal. Use when choosing a service or specialist, checking or buying appraisal credits, confirming a submission, or checking its progress and report.
+compatibility: Python 3.9+, Node.js 24+, and companion heribase-workspace, heribase-task-package, and heribase-cli skills.
 metadata:
-  short-description: 鉴定材料、确认提交与报告跟进
+  short-description: Prepare, submit, and track expert coin appraisals
 ---
 
 # HeriBase 真人鉴定
